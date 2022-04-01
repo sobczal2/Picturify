@@ -1,39 +1,58 @@
-﻿using System.Reflection;
+﻿using System.Collections.Generic;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Sobczal.Picturify.Core.Data;
+using Sobczal.Picturify.Core.Processing.Filters;
 
 namespace Sobczal.Picturify.Core.Processing
 {
-    public abstract class BaseProcessor
+    public abstract class BaseProcessor<T> : IBaseProcessor where T : IProcessorParams
     {
-        public virtual FastImage Before(FastImage fastImage, CancellationToken cancellationToken)
+        protected List<BaseFilter> _filters;
+        protected T ProcessorParams;
+
+        public BaseProcessor(T processorParams)
         {
-            PicturifyConfig.LogInfo($"{GetType().Name}.{MethodBase.GetCurrentMethod().Name} called.");
+            _filters = new List<BaseFilter>();
+            ProcessorParams = processorParams;
+        }
+        public virtual async Task<IFastImage> Before(IFastImage fastImage, CancellationToken cancellationToken)
+        {
+            foreach (var filter in _filters)
+            {
+                fastImage = await filter.Before(fastImage, ProcessorParams, cancellationToken);
+            }
+            PicturifyConfig.LogInfo($"{GetType().Name}.{MethodBase.GetCurrentMethod().Name} executed.");
             return fastImage;
         }
 
-        public virtual async Task<FastImage> BeforeAsync(FastImage fastImage, CancellationToken cancellationToken)
+        public virtual Task<IFastImage> Process(IFastImage fastImage, CancellationToken cancellationToken)
         {
-            return await Task.Factory.StartNew(() => Before(fastImage, cancellationToken));
+            PicturifyConfig.LogInfo($"{GetType().Name}.{MethodBase.GetCurrentMethod().Name} executed.");
+            return Task.FromResult(fastImage);
         }
 
-        public abstract FastImage Process(FastImage fastImage, CancellationToken cancellationToken);
-
-        public virtual async Task<FastImage> ProcessAsync(FastImage fastImage, CancellationToken cancellationToken)
+        public virtual async Task<IFastImage> After(IFastImage fastImage, CancellationToken cancellationToken)
         {
-            return await Task.Factory.StartNew(() => Process(fastImage, cancellationToken));
-        }
-        
-        public virtual FastImage After(FastImage fastImage, CancellationToken cancellationToken)
-        {
-            PicturifyConfig.LogInfo($"{GetType().Name}.{MethodBase.GetCurrentMethod().Name} called.");
+            foreach (var filter in _filters)
+            {
+                fastImage = await filter.After(fastImage, ProcessorParams, cancellationToken);
+            }
+            PicturifyConfig.LogInfo($"{GetType().Name}.{MethodBase.GetCurrentMethod().Name} executed.");
             return fastImage;
         }
 
-        public virtual async Task<FastImage> AfterAsync(FastImage fastImage, CancellationToken cancellationToken)
+        public IBaseProcessor AddFilter(BaseFilter filter)
         {
-            return await Task.Factory.StartNew(() => After(fastImage, cancellationToken));
+            _filters.Add(filter);
+            return this;
+        }
+
+        public IBaseProcessor ClearFilters()
+        {
+            _filters.Clear();
+            return this;
         }
     }
 }
