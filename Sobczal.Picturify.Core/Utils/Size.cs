@@ -1,7 +1,8 @@
-﻿namespace Sobczal.Picturify.Core.Utils;
-
-public struct Size
+﻿namespace Sobczal.Picturify.Core.Utils
 {
-    public int Width { get; set; }
-    public int Height { get; set; }
+    public struct Size
+    {
+        public int Width { get; set; }
+        public int Height { get; set; }
+    }
 }

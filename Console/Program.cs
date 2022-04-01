@@ -1,11 +1,20 @@
 ﻿using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
+using Sobczal.Picturify.Core;
 using Sobczal.Picturify.Core.Data;
+using Sobczal.Picturify.Core.Processing;
 using Sobczal.Picturify.Core.Utils;
 
-var sw = new Stopwatch();
-sw.Start();
-var image = FastImageFactory.FromFile(@"D:\dev\dotnet\libraries\images\PicturifyExamples\temp\frame00001.jpg", ImageType.ARGB);
-image.AsGreyscale().Save(@"D:\dev\dotnet\libraries\images\PicturifyExamples\output.jpg");
-
-sw.Stop();
-Console.WriteLine(sw.ElapsedMilliseconds);
+namespace Console
+{
+    public class Program
+    {
+        public static async Task Main(string[] args)
+        {
+            var fastImage = FastImage.FromFile(@"D:\dev\dotnet\libraries\images\PicturifyExamples\output.jpg");
+            fastImage.GetCopy().Crop(new SquareAreaSelector(100, 200, 800, 600)).Save(@"D:\dev\dotnet\libraries\images\PicturifyExamples\output2.jpg");
+            fastImage.GetCopy().ToGrayscale().Crop(new SquareAreaSelector(100, 200, 800, 600)).Save(@"D:\dev\dotnet\libraries\images\PicturifyExamples\output3.jpg");
+        }
+    }
+}
