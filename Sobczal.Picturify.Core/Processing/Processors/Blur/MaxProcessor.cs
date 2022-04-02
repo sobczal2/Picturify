@@ -17,7 +17,8 @@ namespace Sobczal.Picturify.Core.Processing.Blur
             var rbp = new RollingBucketProcessor(new RollingBucketParams
             {
                 CalculateOneFunc = ProcessCalculateOne, ChannelSelector = ProcessorParams.ChannelSelector,
-                PSize = ProcessorParams.PSize, EdgeBehaviourType = ProcessorParams.EdgeBehaviourType
+                PSize = ProcessorParams.PSize, EdgeBehaviourType = ProcessorParams.EdgeBehaviourType,
+                WorkingArea = ProcessorParams.WorkingArea
             });
             fastImage.ExecuteProcessor(rbp);
             return base.Process(fastImage, cancellationToken);

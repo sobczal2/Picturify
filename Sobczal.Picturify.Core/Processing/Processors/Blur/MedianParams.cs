@@ -2,7 +2,7 @@
 
 namespace Sobczal.Picturify.Core.Processing.Blur
 {
-    public class MedianParams : IProcessorParams
+    public class MedianParams : ProcessorParams
     {
         public PSize PSize { get; set; } = new PSize {Width = 7, Height = 7};
         public EdgeBehaviourSelector.Type EdgeBehaviourType { get; set; }

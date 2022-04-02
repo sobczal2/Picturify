@@ -6,10 +6,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using Sobczal.Picturify.Core.Data;
 using Sobczal.Picturify.Core.Processing.Filters;
+using Sobczal.Picturify.Core.Utils;
 
 namespace Sobczal.Picturify.Core.Processing
 {
-    public abstract class BaseProcessor<T, V> : IBaseProcessor where T : IProcessorParams where V : IFastImage
+    public abstract class BaseProcessor<T, V> : IBaseProcessor where T : ProcessorParams where V : IFastImage
     {
         protected List<BaseFilter> _filters;
         protected T ProcessorParams;
@@ -27,6 +28,9 @@ namespace Sobczal.Picturify.Core.Processing
             else if (imageType == typeof(FastImageF))
                 fastImage = fastImage.ToFloatRepresentation();
             else throw new NotSupportedException($"Image of type {imageType} is not supported.");
+            if (ProcessorParams.WorkingArea is null)
+                ProcessorParams.WorkingArea =
+                    new SquareAreaSelector(0, 0, fastImage.PSize.Width, fastImage.PSize.Height);
             for (var i = 0; i < _filters.Count; i++)
             {
                 fastImage = await _filters[i].Before(fastImage, ProcessorParams, cancellationToken);

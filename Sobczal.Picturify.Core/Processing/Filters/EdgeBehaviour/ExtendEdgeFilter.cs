@@ -18,7 +18,7 @@ namespace Sobczal.Picturify.Core.Processing.Filters.EdgeBehaviour
                 throw new ArgumentException("Kernel size must be 2n+1x2n+1.");
             _kernelPSize = kernelPSize;
         }
-        public override async Task<IFastImage> Before(IFastImage fastImage, IProcessorParams processorParams, CancellationToken cancellationToken)
+        public override async Task<IFastImage> Before(IFastImage fastImage, ProcessorParams processorParams, CancellationToken cancellationToken)
         {
             switch (fastImage)
             {
@@ -29,6 +29,10 @@ namespace Sobczal.Picturify.Core.Processing.Filters.EdgeBehaviour
                     fastImage = await fastImageF.ProcessAsync(BeforeProcessingFunctionF, cancellationToken);
                     break;
             }
+
+            var rangeX = _kernelPSize.Width / 2;
+            var rangeY = _kernelPSize.Height / 2;
+            processorParams.WorkingArea.AddBorder(rangeX, rangeY, rangeX, rangeY);
             return await base.Before(fastImage, processorParams, cancellationToken);
         }
 
@@ -180,11 +184,14 @@ namespace Sobczal.Picturify.Core.Processing.Filters.EdgeBehaviour
             return arr;
         }
 
-        public override async Task<IFastImage> After(IFastImage fastImage, IProcessorParams processorParams, CancellationToken cancellationToken)
+        public override async Task<IFastImage> After(IFastImage fastImage, ProcessorParams processorParams, CancellationToken cancellationToken)
         {
             var areaSelector = new SquareAreaSelector(_kernelPSize.Width / 2, _kernelPSize.Height / 2,
                 fastImage.PSize.Width - _kernelPSize.Width / 2, fastImage.PSize.Height - _kernelPSize.Height / 2);
             fastImage.Crop(areaSelector);
+            var rangeX = _kernelPSize.Width / 2;
+            var rangeY = _kernelPSize.Height / 2;
+            processorParams.WorkingArea.Crop(rangeX, rangeY, rangeX, rangeY);
             return await base.After(fastImage, processorParams, cancellationToken);
         }
     }

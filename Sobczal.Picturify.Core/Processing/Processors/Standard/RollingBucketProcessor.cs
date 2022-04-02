@@ -38,7 +38,8 @@ namespace Sobczal.Picturify.Core.Processing.Standard
             var rangeX = ProcessorParams.PSize.Width / 2;
             var rangeY = ProcessorParams.PSize.Height / 2;
             if(depth == 1) ProcessorParams.ChannelSelector = ChannelSelector.A;
-            Parallel.For(rangeX, width - rangeX, po, i =>
+            var bounds = ProcessorParams.WorkingArea.GetBounds();
+            Parallel.For(bounds.left, bounds.right, po, i =>
             {
                 if (buckets.Value is null) buckets.Value = new ushort[256, depth];
                 for (var j = 0; j < 256; j++)
@@ -48,45 +49,41 @@ namespace Sobczal.Picturify.Core.Processing.Standard
                         buckets.Value[j, k] = 0;
                     }
                 }
-
-                var sum = 0;
+                
                 for (var l = -rangeX; l <= rangeX; l++)
                 {
-                    for (var j = 0; j < rangeY; j++)
+                    for (var j = bounds.bottom - rangeY; j < bounds.bottom; j++)
                     {
                         for (var c = 0; c < depth; c++)
                         {
                             if (!ProcessorParams.ChannelSelector.Used(c)) continue;
                             buckets.Value[pixels[i + l, j, c], c]++;
-                            sum++;
                         }
                     }
                 }
                 for (var l = -rangeX; l <= rangeX; l++)
                 {
-                    for (var j = 0; j <= rangeY; j++)
+                    for (var j = bounds.bottom - rangeY; j <= bounds.bottom; j++)
                     {
                         for (var c = 0; c < depth; c++)
                         {
                             if (!ProcessorParams.ChannelSelector.Used(c)) continue;
                             buckets.Value[pixels[i + l, j + rangeY, c], c]++;
-                            sum++;
                         }
                     }
                 }
 
                 for (byte c = 0; c < depth; c++)
                 {
-                    if (!ProcessorParams.ChannelSelector.Used(c)) continue;
-                    tempArr[i, rangeY, c] = ProcessorParams.CalculateOneFunc(buckets.Value, c);
+                    if (!ProcessorParams.ChannelSelector.Used(c) || !ProcessorParams.WorkingArea.ShouldEdit(i, rangeY)) continue;
+                    tempArr[i, bounds.bottom, c] = ProcessorParams.CalculateOneFunc(buckets.Value, c);
                 }
-                for (var j = rangeY + 1; j < height - rangeY; j++)
+                for (var j = bounds.bottom + 1; j < bounds.top; j++)
                 {
                     for (var l = -rangeX; l <= rangeX; l++)
                     {
                         for (var c = 0; c < depth; c++)
                         {
-                            //TODO bench
                             if (!ProcessorParams.ChannelSelector.Used(c)) continue;
                             buckets.Value[pixels[i + l, j + rangeY, c], c]++;
                             buckets.Value[pixels[i + l, j - rangeY - 1, c], c]--;
@@ -95,7 +92,7 @@ namespace Sobczal.Picturify.Core.Processing.Standard
 
                     for (byte c = 0; c < depth; c++)
                     {
-                        if (!ProcessorParams.ChannelSelector.Used(c)) continue;
+                        if (!ProcessorParams.ChannelSelector.Used(c) || !ProcessorParams.WorkingArea.ShouldEdit(i, j)) continue;
                         tempArr[i, j, c] = ProcessorParams.CalculateOneFunc(buckets.Value, c);
                     }
                 }

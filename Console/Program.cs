@@ -14,7 +14,7 @@ namespace Console
             var sw = new Stopwatch();
             var fastImage = FastImageFactory.FromFile(@"D:\dev\dotnet\libraries\images\PicturifyExamples\mountain.jpg");
             sw.Start();
-            fastImage = await fastImage.ExecuteProcessorAsync(new MedianProcessor(new MedianParams{ChannelSelector = ChannelSelector.RGB, EdgeBehaviourType = EdgeBehaviourSelector.Type.Extend, PSize = new PSize{Width = 51,Height = 51}}), CancellationToken.None);
+            fastImage = await fastImage.ExecuteProcessorAsync(new MaxProcessor(new MaxParams{ChannelSelector = ChannelSelector.RGB, EdgeBehaviourType = EdgeBehaviourSelector.Type.Extend, PSize = new PSize{Width = 25,Height = 25}, WorkingArea = new SquareAreaSelector(500, 500, 1500, 1500)}), CancellationToken.None);
             sw.Stop();
             fastImage.Save(@"D:\dev\dotnet\libraries\images\PicturifyExamples\output1.jpg");
             System.Console.WriteLine(sw.ElapsedMilliseconds);

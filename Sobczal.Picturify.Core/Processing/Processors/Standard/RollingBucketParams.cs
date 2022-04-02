@@ -3,7 +3,7 @@ using Sobczal.Picturify.Core.Utils;
 
 namespace Sobczal.Picturify.Core.Processing.Standard
 {
-    public class RollingBucketParams : IProcessorParams
+    public class RollingBucketParams : ProcessorParams
     {
         public PSize PSize { get; set; } = new PSize {Width = 7, Height = 7};
         /// <summary>
@@ -12,6 +12,5 @@ namespace Sobczal.Picturify.Core.Processing.Standard
         public Func<ushort[,], byte, byte> CalculateOneFunc { get; set; }
         public EdgeBehaviourSelector.Type EdgeBehaviourType { get; set; }
         public ChannelSelector ChannelSelector { get; set; }
-
     }
 }
