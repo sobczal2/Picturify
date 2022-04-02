@@ -182,12 +182,13 @@ namespace Sobczal.Picturify.Core.Data
                 }
             });
             sw.Stop();
-            PicturifyConfig.LogDebug($"{GetType().Name}.{MethodBase.GetCurrentMethod().Name} took {sw.ElapsedMilliseconds} ms.");
+            PicturifyConfig.LogTimeDebug($"{GetType().Name}.{MethodBase.GetCurrentMethod().Name}", sw.ElapsedMilliseconds);
             return new FastImageB(arr);
         }
 
         public override FastImageF ToFloatRepresentation()
         {
+            PicturifyConfig.LogTimeDebug($"{GetType().Name}.{MethodBase.GetCurrentMethod().Name}", 0);
             return this;
         }
     }

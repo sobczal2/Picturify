@@ -31,13 +31,11 @@ namespace Sobczal.Picturify.Core.Processing
             {
                 fastImage = await _filters[i].Before(fastImage, ProcessorParams, cancellationToken);
             }
-            PicturifyConfig.LogInfo($"{GetType().Name}.{MethodBase.GetCurrentMethod().Name} executed.");
             return fastImage;
         }
 
         public virtual Task<IFastImage> Process(IFastImage fastImage, CancellationToken cancellationToken)
         {
-            PicturifyConfig.LogInfo($"{GetType().Name}.{MethodBase.GetCurrentMethod().Name} executed.");
             return Task.FromResult(fastImage);
         }
 
@@ -47,7 +45,6 @@ namespace Sobczal.Picturify.Core.Processing
             {
                 fastImage = await _filters[i].After(fastImage, ProcessorParams, cancellationToken);
             }
-            PicturifyConfig.LogInfo($"{GetType().Name}.{MethodBase.GetCurrentMethod().Name} executed.");
             return fastImage;
         }
 

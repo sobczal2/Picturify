@@ -23,10 +23,10 @@ namespace Sobczal.Picturify.Core.Processing.Filters.EdgeBehaviour
             switch (fastImage)
             {
                 case FastImageB fastImageB:
-                    await fastImageB.ProcessAsync(BeforeProcessingFunctionB, cancellationToken);
+                    fastImage = await fastImageB.ProcessAsync(BeforeProcessingFunctionB, cancellationToken);
                     break;
                 case FastImageF fastImageF:
-                    await fastImageF.ProcessAsync(BeforeProcessingFunctionF, cancellationToken);
+                    fastImage = await fastImageF.ProcessAsync(BeforeProcessingFunctionF, cancellationToken);
                     break;
             }
             return await base.Before(fastImage, processorParams, cancellationToken);
@@ -102,7 +102,7 @@ namespace Sobczal.Picturify.Core.Processing.Filters.EdgeBehaviour
                 }
             }
             sw.Stop();
-            PicturifyConfig.LogDebug($"{GetType().Name}.{MethodBase.GetCurrentMethod().Name} took {sw.ElapsedMilliseconds} ms.");
+            PicturifyConfig.LogTimeDebug($"{GetType().Name}.{MethodBase.GetCurrentMethod().Name}", sw.ElapsedMilliseconds);
             return arr;
         }
         
@@ -176,7 +176,7 @@ namespace Sobczal.Picturify.Core.Processing.Filters.EdgeBehaviour
                 }
             }
             sw.Stop();
-            PicturifyConfig.LogDebug($"{GetType().Name}.{MethodBase.GetCurrentMethod().Name} took {sw.ElapsedMilliseconds} ms.");
+            PicturifyConfig.LogTimeDebug($"{GetType().Name}.{MethodBase.GetCurrentMethod().Name}", sw.ElapsedMilliseconds);
             return arr;
         }
 

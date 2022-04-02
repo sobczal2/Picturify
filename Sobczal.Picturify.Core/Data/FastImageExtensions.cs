@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 using Sobczal.Picturify.Core.Processing;
 
@@ -12,9 +13,13 @@ namespace Sobczal.Picturify.Core.Data
         }
         public static async Task<IFastImage> ExecuteProcessorAsync(this IFastImage fastImage, IBaseProcessor processor, CancellationToken cancellationToken)
         {
+            var sw = new Stopwatch();
+            sw.Start();
             fastImage = await processor.Before(fastImage, cancellationToken);
             fastImage = await processor.Process(fastImage, cancellationToken);
             fastImage = await processor.After(fastImage, cancellationToken);
+            sw.Stop();
+            PicturifyConfig.LogTime(processor.GetType().Name, sw.ElapsedMilliseconds);
             return fastImage;
         }
     }

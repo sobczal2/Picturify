@@ -41,5 +41,15 @@ namespace Sobczal.Picturify.Core
         {
             Log.Error(message);
         }
+
+        public static void LogTimeDebug(string name, long timeMs)
+        {
+            Log.Debug($"{name} took {timeMs} ms.");
+        }
+        
+        public static void LogTime(string name, long timeMs)
+        {
+            Log.Information($"{name} took {timeMs} ms.");
+        }
     }
 }

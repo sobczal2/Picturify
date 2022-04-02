@@ -167,6 +167,7 @@ namespace Sobczal.Picturify.Core.Data
 
         public override FastImageB ToByteRepresentation()
         {
+            PicturifyConfig.LogTimeDebug($"{GetType().Name}.{MethodBase.GetCurrentMethod().Name}", 0);
             return this;
         }
 
@@ -186,7 +187,7 @@ namespace Sobczal.Picturify.Core.Data
                 }
             });
             sw.Stop();
-            PicturifyConfig.LogDebug($"{GetType().Name}.{MethodBase.GetCurrentMethod().Name} took {sw.ElapsedMilliseconds} ms.");
+            PicturifyConfig.LogTimeDebug($"{GetType().Name}.{MethodBase.GetCurrentMethod().Name}", sw.ElapsedMilliseconds);
             return new FastImageF(arr);
         }
     }

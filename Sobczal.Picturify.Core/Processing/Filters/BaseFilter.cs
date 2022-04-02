@@ -10,13 +10,11 @@ namespace Sobczal.Picturify.Core.Processing.Filters
     {
         public virtual Task<IFastImage> Before(IFastImage fastImage, IProcessorParams processorParams, CancellationToken cancellationToken)
         {
-            PicturifyConfig.LogInfo($"{GetType().Name}.{MethodBase.GetCurrentMethod().Name} executed.");
             return Task.FromResult(fastImage);
         }
 
         public virtual Task<IFastImage> After(IFastImage fastImage, IProcessorParams processorParams, CancellationToken cancellationToken)
         {
-            PicturifyConfig.LogInfo($"{GetType().Name}.{MethodBase.GetCurrentMethod().Name} executed.");
             return Task.FromResult(fastImage);
         }
     }
