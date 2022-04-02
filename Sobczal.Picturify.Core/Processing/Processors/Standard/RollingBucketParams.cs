@@ -5,7 +5,7 @@ namespace Sobczal.Picturify.Core.Processing.Standard
 {
     public class RollingBucketParams : ProcessorParams
     {
-        public PSize PSize { get; set; } = new PSize {Width = 7, Height = 7};
+        public PSize PSize { get; set; } = new PSize (7, 7);
         /// <summary>
         /// ushort[] table of neighboring numbers of pixels of size 256, channel
         /// </summary>

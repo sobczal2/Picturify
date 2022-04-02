@@ -19,7 +19,7 @@ namespace Sobczal.Picturify.Core.Data
         /// When referring to pixels itself it is important to iterate like this [outer loop, middle loop, inner loop], because of performance gains.
         /// </summary>
         protected T[,,] _pixels;
-        public PSize PSize => new PSize {Width = _pixels.GetLength(0), Height = _pixels.GetLength(1)};
+        public PSize PSize => new PSize(_pixels.GetLength(0), _pixels.GetLength(1));
 
         public bool Grayscale => _pixels.GetLength(2) == 1;
 

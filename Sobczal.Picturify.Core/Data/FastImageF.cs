@@ -23,7 +23,7 @@ namespace Sobczal.Picturify.Core.Data
         {
         }
 
-        internal FastImageF(Image image) : this(new PSize {Width = image.Width, Height = image.Height})
+        internal FastImageF(Image image) : this(new PSize (image.Width, image.Height))
         {
             var widthInBytes = PSize.Width * 4;
             var bitmap = new Bitmap(image);
