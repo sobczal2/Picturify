@@ -5,13 +5,12 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Sobczal.Picturify.Core.Utils;
-using Size = Sobczal.Picturify.Core.Utils.Size;
 
 namespace Sobczal.Picturify.Core.Data
 {
     public interface IFastImage
     {
-        Size Size { get; }
+        PSize PSize { get; }
         void Save(Stream stream, ImageFormat format);
         void Save(string path);
         Task SaveAsync(Stream stream, ImageFormat format, CancellationToken cancellationToken);

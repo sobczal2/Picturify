@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.CodeDom;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,7 +9,7 @@ using Sobczal.Picturify.Core.Processing.Filters;
 
 namespace Sobczal.Picturify.Core.Processing
 {
-    public abstract class BaseProcessor<T> : IBaseProcessor where T : IProcessorParams
+    public abstract class BaseProcessor<T, V> : IBaseProcessor where T : IProcessorParams where V : IFastImage
     {
         protected List<BaseFilter> _filters;
         protected T ProcessorParams;
@@ -19,9 +21,15 @@ namespace Sobczal.Picturify.Core.Processing
         }
         public virtual async Task<IFastImage> Before(IFastImage fastImage, CancellationToken cancellationToken)
         {
-            foreach (var filter in _filters)
+            var imageType = typeof(V);
+            if (imageType == typeof(FastImageB))
+                fastImage = fastImage.ToByteRepresentation();
+            else if (imageType == typeof(FastImageF))
+                fastImage = fastImage.ToFloatRepresentation();
+            else throw new NotSupportedException($"Image of type {imageType} is not supported.");
+            for (var i = 0; i < _filters.Count; i++)
             {
-                fastImage = await filter.Before(fastImage, ProcessorParams, cancellationToken);
+                fastImage = await _filters[i].Before(fastImage, ProcessorParams, cancellationToken);
             }
             PicturifyConfig.LogInfo($"{GetType().Name}.{MethodBase.GetCurrentMethod().Name} executed.");
             return fastImage;
@@ -35,9 +43,9 @@ namespace Sobczal.Picturify.Core.Processing
 
         public virtual async Task<IFastImage> After(IFastImage fastImage, CancellationToken cancellationToken)
         {
-            foreach (var filter in _filters)
+            for (var i = _filters.Count - 1; i >= 0; i--)
             {
-                fastImage = await filter.After(fastImage, ProcessorParams, cancellationToken);
+                fastImage = await _filters[i].After(fastImage, ProcessorParams, cancellationToken);
             }
             PicturifyConfig.LogInfo($"{GetType().Name}.{MethodBase.GetCurrentMethod().Name} executed.");
             return fastImage;

@@ -7,7 +7,6 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Sobczal.Picturify.Core.Utils;
-using Size = Sobczal.Picturify.Core.Utils.Size;
 
 namespace Sobczal.Picturify.Core.Data
 {
@@ -16,7 +15,7 @@ namespace Sobczal.Picturify.Core.Data
     /// </summary>
     public class FastImageB : FastImage<byte>
     {
-        internal FastImageB(Size size) : base(size)
+        internal FastImageB(PSize pSize) : base(pSize)
         {
         }
 
@@ -24,18 +23,18 @@ namespace Sobczal.Picturify.Core.Data
         {
         }
         
-        internal FastImageB(Image image) : this(new Size {Width = image.Width, Height = image.Height})
+        internal FastImageB(Image image) : this(new PSize {Width = image.Width, Height = image.Height})
         {
-            var widthInBytes = Size.Width * 4;
+            var widthInBytes = PSize.Width * 4;
             var bitmap = new Bitmap(image);
-            var arr = new byte[widthInBytes * Size.Height];
+            var arr = new byte[widthInBytes * PSize.Height];
             var bitmapData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly,
                 bitmap.PixelFormat);
             var ptr = bitmapData.Scan0;
             Marshal.Copy(ptr, arr, 0, arr.Length);
-            Parallel.For(0, Size.Width, i =>
+            Parallel.For(0, PSize.Width, i =>
             {
-                for (var j = 0; j < Size.Height; j++)
+                for (var j = 0; j < PSize.Height; j++)
                 {
                     for (var k = 0; k < 4; k++)
                     {
@@ -51,14 +50,14 @@ namespace Sobczal.Picturify.Core.Data
         
         protected override Bitmap GetBitmap(CancellationToken cancellationToken)
         {
-            var widthInBytes = Size.Width * 4;
-            var arr = new byte[widthInBytes * Size.Height];
+            var widthInBytes = PSize.Width * 4;
+            var arr = new byte[widthInBytes * PSize.Height];
             var po = new ParallelOptions();
             po.CancellationToken = cancellationToken;
             var depth = _pixels.GetLength(2);
-            Parallel.For(0, Size.Width, po, i =>
+            Parallel.For(0, PSize.Width, po, i =>
             {
-                for (var j = 0; j < Size.Height; j++)
+                for (var j = 0; j < PSize.Height; j++)
                 {
                     if (depth == 1)
                     {
@@ -78,7 +77,7 @@ namespace Sobczal.Picturify.Core.Data
                     }
                 }
             });
-            var bitmap = new Bitmap(Size.Width, Size.Height);
+            var bitmap = new Bitmap(PSize.Width, PSize.Height);
             var bitmapData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.WriteOnly,
                 bitmap.PixelFormat);
             var ptr = bitmapData.Scan0;
@@ -90,10 +89,10 @@ namespace Sobczal.Picturify.Core.Data
         {
             if (Grayscale)
                 return this;
-            var arr = new byte[Size.Width, Size.Height, 1];
-            Parallel.For(0, Size.Width, i =>
+            var arr = new byte[PSize.Width, PSize.Height, 1];
+            Parallel.For(0, PSize.Width, i =>
             {
-                for (var j = 0; j < Size.Height; j++)
+                for (var j = 0; j < PSize.Height; j++)
                 {
                     arr[i, j, 0] = (byte) (_pixels[i, j, 1] * 0.3f + _pixels[i, j, 2] * 0.59f + _pixels[i, j, 3] * 0.11f);
                 }
@@ -106,10 +105,10 @@ namespace Sobczal.Picturify.Core.Data
         {
             if (!Grayscale)
                 return this;
-            var arr = new byte[Size.Width, Size.Height, 4];
-            Parallel.For(0, Size.Width, i =>
+            var arr = new byte[PSize.Width, PSize.Height, 4];
+            Parallel.For(0, PSize.Width, i =>
             {
-                for (var j = 0; j < Size.Height; j++)
+                for (var j = 0; j < PSize.Height; j++)
                 {
                     arr[i, j, 0] = 255;
                     for (var k = 1; k < 4; k++)
@@ -140,7 +139,7 @@ namespace Sobczal.Picturify.Core.Data
         
         public override IFastImage Crop(SquareAreaSelector areaSelector)
         {
-            if (!areaSelector.Validate(Size))
+            if (!areaSelector.Validate(PSize))
                 throw new ArgumentException("All values must be in bounds of original image.");
             var depth = _pixels.GetLength(2);
             var arr = new byte[areaSelector.Width, areaSelector.Height, depth];
@@ -161,7 +160,7 @@ namespace Sobczal.Picturify.Core.Data
         public override IFastImage GetCopy()
         {
             var depth = _pixels.GetLength(2);
-            var copiedArray = new byte[Size.Width, Size.Height, depth];
+            var copiedArray = new byte[PSize.Width, PSize.Height, depth];
             Array.Copy(_pixels, copiedArray, _pixels.Length);
             return new FastImageB(copiedArray);
         }

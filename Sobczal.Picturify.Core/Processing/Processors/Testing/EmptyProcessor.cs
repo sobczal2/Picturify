@@ -1,6 +1,8 @@
-﻿namespace Sobczal.Picturify.Core.Processing.Testing
+﻿using Sobczal.Picturify.Core.Data;
+
+namespace Sobczal.Picturify.Core.Processing.Testing
 {
-    public class EmptyProcessor : BaseProcessor<EmptyProcessorParams>
+    public class EmptyProcessor : BaseProcessor<EmptyProcessorParams, FastImageB>
     {
         public EmptyProcessor(EmptyProcessorParams processorParams) : base(processorParams)
         {

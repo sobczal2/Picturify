@@ -2,13 +2,9 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Numerics;
-using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Sobczal.Picturify.Core.Utils;
-using Size = Sobczal.Picturify.Core.Utils.Size;
 
 namespace Sobczal.Picturify.Core.Data
 {
@@ -23,15 +19,15 @@ namespace Sobczal.Picturify.Core.Data
         /// When referring to pixels itself it is important to iterate like this [outer loop, middle loop, inner loop], because of performance gains.
         /// </summary>
         protected T[,,] _pixels;
-        public Size Size => new Size {Width = _pixels.GetLength(0), Height = _pixels.GetLength(1)};
+        public PSize PSize => new PSize {Width = _pixels.GetLength(0), Height = _pixels.GetLength(1)};
 
         public bool Grayscale => _pixels.GetLength(2) == 1;
 
         #region Constructors
 
-        internal FastImage(Size size)
+        internal FastImage(PSize pSize)
         {
-            _pixels = new T[size.Width, size.Height, 4];
+            _pixels = new T[pSize.Width, pSize.Height, 4];
         }
 
         internal FastImage(T[,,] pixels)

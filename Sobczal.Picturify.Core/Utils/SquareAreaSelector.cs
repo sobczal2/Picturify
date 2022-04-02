@@ -26,9 +26,9 @@ namespace Sobczal.Picturify.Core.Utils
             return x >= Left && x <= Right && y <= Top && y >= Bottom;
         }
 
-        public bool Validate(Size size)
+        public bool Validate(PSize pSize)
         {
-            return Left >= 0 && Right < size.Width && Bottom >= 0 && Top <= size.Height && Left < Right &&
+            return Left >= 0 && Right < pSize.Width && Bottom >= 0 && Top <= pSize.Height && Left < Right &&
                    Bottom < Top;
         }
     }

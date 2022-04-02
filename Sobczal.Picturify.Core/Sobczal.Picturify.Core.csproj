@@ -11,8 +11,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Processing\Processors\Blur" />
-      <Folder Include="Processing\Processors\Standard" />
       <Folder Include="Services" />
     </ItemGroup>
 

@@ -8,13 +8,13 @@ namespace Sobczal.Picturify.Core.Data
     {
         public static IFastImage ExecuteProcessor(this IFastImage fastImage, IBaseProcessor processor)
         {
-            return fastImage.ExecuteProcessorAsync(processor, CancellationToken.None).Result;
+            return ExecuteProcessorAsync(fastImage, processor, CancellationToken.None).Result;
         }
         public static async Task<IFastImage> ExecuteProcessorAsync(this IFastImage fastImage, IBaseProcessor processor, CancellationToken cancellationToken)
         {
-            await processor.Before(fastImage, CancellationToken.None);
-            await processor.Process(fastImage, CancellationToken.None);
-            await processor.After(fastImage, CancellationToken.None);
+            fastImage = await processor.Before(fastImage, cancellationToken);
+            fastImage = await processor.Process(fastImage, cancellationToken);
+            fastImage = await processor.After(fastImage, cancellationToken);
             return fastImage;
         }
     }

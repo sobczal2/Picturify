@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 using System.Reflection;
-using Size = Sobczal.Picturify.Core.Utils.Size;
+using Sobczal.Picturify.Core.Utils;
 
 namespace Sobczal.Picturify.Core.Data
 {
@@ -12,15 +12,15 @@ namespace Sobczal.Picturify.Core.Data
             Byte
         }
         
-        public static IFastImage Empty(Size size, Version version = Version.Float)
+        public static IFastImage Empty(PSize pSize, Version version = Version.Float)
         {
             PicturifyConfig.LogInfo($"FastImage{MethodBase.GetCurrentMethod().Name}");
             switch (version)
             {
                 case Version.Byte:
-                    return new FastImageB(size);
+                    return new FastImageB(pSize);
                 default:
-                    return new FastImageF(size);
+                    return new FastImageF(pSize);
             }
         }
         
