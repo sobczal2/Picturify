@@ -20,7 +20,7 @@ namespace Sobczal.Picturify.Core.Processing
             _filters = new List<BaseFilter>();
             ProcessorParams = processorParams;
         }
-        public virtual async Task<IFastImage> Before(IFastImage fastImage, CancellationToken cancellationToken)
+        public virtual IFastImage Before(IFastImage fastImage, CancellationToken cancellationToken)
         {
             var imageType = typeof(V);
             if (imageType == typeof(FastImageB))
@@ -33,21 +33,21 @@ namespace Sobczal.Picturify.Core.Processing
                     new SquareAreaSelector(0, 0, fastImage.PSize.Width, fastImage.PSize.Height);
             for (var i = 0; i < _filters.Count; i++)
             {
-                fastImage = await _filters[i].Before(fastImage, ProcessorParams, cancellationToken);
+                fastImage = _filters[i].Before(fastImage, ProcessorParams, cancellationToken);
             }
             return fastImage;
         }
 
-        public virtual Task<IFastImage> Process(IFastImage fastImage, CancellationToken cancellationToken)
+        public virtual IFastImage Process(IFastImage fastImage, CancellationToken cancellationToken)
         {
-            return Task.FromResult(fastImage);
+            return fastImage;
         }
 
-        public virtual async Task<IFastImage> After(IFastImage fastImage, CancellationToken cancellationToken)
+        public virtual IFastImage After(IFastImage fastImage, CancellationToken cancellationToken)
         {
             for (var i = _filters.Count - 1; i >= 0; i--)
             {
-                fastImage = await _filters[i].After(fastImage, ProcessorParams, cancellationToken);
+                fastImage = _filters[i].After(fastImage, ProcessorParams, cancellationToken);
             }
             return fastImage;
         }

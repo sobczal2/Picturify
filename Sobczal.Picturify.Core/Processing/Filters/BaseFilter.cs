@@ -8,14 +8,14 @@ namespace Sobczal.Picturify.Core.Processing.Filters
 {
     public class BaseFilter
     {
-        public virtual Task<IFastImage> Before(IFastImage fastImage, ProcessorParams processorParams, CancellationToken cancellationToken)
+        public virtual IFastImage Before(IFastImage fastImage, ProcessorParams processorParams, CancellationToken cancellationToken)
         {
-            return Task.FromResult(fastImage);
+            return fastImage;
         }
 
-        public virtual Task<IFastImage> After(IFastImage fastImage, ProcessorParams processorParams, CancellationToken cancellationToken)
+        public virtual IFastImage After(IFastImage fastImage, ProcessorParams processorParams, CancellationToken cancellationToken)
         {
-            return Task.FromResult(fastImage);
+            return fastImage;
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Sobczal.Picturify.Core.Processing.Blur
             _tillMedian = ProcessorParams.PSize.Width * ProcessorParams.PSize.Height / 2;
         }
 
-        public override Task<IFastImage> Process(IFastImage fastImage, CancellationToken cancellationToken)
+        public override IFastImage Process(IFastImage fastImage, CancellationToken cancellationToken)
         {
             var rbp = new RollingBucketProcessor(new RollingBucketParams
             {

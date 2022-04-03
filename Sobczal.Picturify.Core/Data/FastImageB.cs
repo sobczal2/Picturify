@@ -127,16 +127,7 @@ namespace Sobczal.Picturify.Core.Data
             _pixels = processingFunction(_pixels, cancellationToken);
             return this;
         }
-        
-        public override async Task<IFastImage> ProcessAsync(Func<byte[,,], CancellationToken, byte[,,]> processingFunction, CancellationToken cancellationToken)
-        {
-            await Task.Factory.StartNew(() =>
-            {
-                _pixels = processingFunction(_pixels, cancellationToken);
-            });
-            return this;
-        }
-        
+
         public override IFastImage Crop(SquareAreaSelector areaSelector)
         {
             if (!areaSelector.Validate(PSize))

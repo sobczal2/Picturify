@@ -12,16 +12,16 @@ namespace Console
         public static async Task Main(string[] args)
         {
             var sw = new Stopwatch();
-            var fastImage = FastImageFactory.FromFile(@"C:\Users\lukas\Downloads\heightmaps\heightmaps\BGIMGimg.png");
+            var fastImage = FastImageFactory.FromFile(@"D:\dev\dotnet\libraries\images\PicturifyExamples\mountain.jpg");
             sw.Start();
-            fastImage = await fastImage.ToGrayscale().ExecuteProcessorAsync(
+            fastImage = fastImage.ExecuteProcessor(
                 new MedianProcessor(new MedianParams
                 {
                     ChannelSelector = ChannelSelector.RGB, EdgeBehaviourType = EdgeBehaviourSelector.Type.Extend,
                     PSize = new PSize(25,25)
-                }), CancellationToken.None);
+                }));
             sw.Stop();
-            fastImage.Save(@"C:\Users\lukas\Downloads\heightmaps\heightmaps\output.png");
+            fastImage.Save(@"D:\dev\dotnet\libraries\images\PicturifyExamples\output.jpg");
             System.Console.WriteLine(sw.ElapsedMilliseconds);
         }
     }

@@ -15,9 +15,9 @@ namespace Sobczal.Picturify.Core.Data
         {
             var sw = new Stopwatch();
             sw.Start();
-            fastImage = await processor.Before(fastImage, cancellationToken);
-            fastImage = await processor.Process(fastImage, cancellationToken);
-            fastImage = await processor.After(fastImage, cancellationToken);
+            fastImage = processor.Before(fastImage, cancellationToken);
+            fastImage = processor.Process(fastImage, cancellationToken);
+            fastImage = processor.After(fastImage, cancellationToken);
             sw.Stop();
             PicturifyConfig.LogTime(processor.GetType().Name, sw.ElapsedMilliseconds);
             return fastImage;

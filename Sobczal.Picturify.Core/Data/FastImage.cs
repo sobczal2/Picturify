@@ -159,9 +159,6 @@ namespace Sobczal.Picturify.Core.Data
         public abstract IFastImage Process(Func<T[,,], CancellationToken, T[,,]> processingFunction,
             CancellationToken cancellationToken);
 
-        public abstract Task<IFastImage> ProcessAsync(Func<T[,,], CancellationToken, T[,,]> processingFunction,
-            CancellationToken cancellationToken);
-
         public abstract IFastImage Crop(SquareAreaSelector areaSelector);
 
         public abstract IFastImage GetCopy();

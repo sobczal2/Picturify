@@ -17,7 +17,7 @@ namespace Sobczal.Picturify.Core.Processing.Standard
             AddFilter(EdgeBehaviourSelector.GetFilter(processorParams.EdgeBehaviourType, processorParams.PSize));
         }
 
-        public override Task<IFastImage> Process(IFastImage fastImage, CancellationToken cancellationToken)
+        public override IFastImage Process(IFastImage fastImage, CancellationToken cancellationToken)
         {
             ((FastImageB) fastImage).Process(ProcessingFunction, cancellationToken);
             return base.Process(fastImage, cancellationToken);
