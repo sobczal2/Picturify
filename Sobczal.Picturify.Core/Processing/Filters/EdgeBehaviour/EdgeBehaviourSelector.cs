@@ -22,6 +22,8 @@ namespace Sobczal.Picturify.Core.Utils
             {
                 case Type.Extend:
                     return new ExtendEdgeFilter(kernelPSize);
+                case Type.Wrap:
+                    return new WrapEdgeFilter(kernelPSize);
                 default:
                     throw new NotImplementedException();
             }

@@ -5,5 +5,6 @@ namespace Sobczal.Picturify.Core.Processing
     public class ProcessorParams
     {
         public IAreaSelector WorkingArea { get; set; }
+        public ChannelSelector ChannelSelector { get; set; }
     }
 }

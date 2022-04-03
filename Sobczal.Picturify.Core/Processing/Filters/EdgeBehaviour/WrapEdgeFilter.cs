@@ -8,11 +8,11 @@ using Sobczal.Picturify.Core.Utils;
 
 namespace Sobczal.Picturify.Core.Processing.Filters.EdgeBehaviour
 {
-    public class ExtendEdgeFilter : BaseFilter
+    public class WrapEdgeFilter : BaseFilter
     {
-        private readonly PSize _kernelPSize;
+                private readonly PSize _kernelPSize;
 
-        public ExtendEdgeFilter(PSize kernelPSize)
+        public WrapEdgeFilter(PSize kernelPSize)
         {
             if (kernelPSize.Width % 2 != 1 || kernelPSize.Height % 2 != 1)
                 throw new ArgumentException("Kernel size must be 2n+1x2n+1.");
@@ -20,6 +20,8 @@ namespace Sobczal.Picturify.Core.Processing.Filters.EdgeBehaviour
         }
         public override IFastImage Before(IFastImage fastImage, ProcessorParams processorParams, CancellationToken cancellationToken)
         {
+            if (_kernelPSize.Width > 2 * fastImage.PSize.Width || _kernelPSize.Height > 2 * fastImage.PSize.Height)
+                throw new ArgumentException("Kernel can't be bigger than 2 * image with Wrap edge behaviour");
             switch (fastImage)
             {
                 case FastImageB fastImageB:
@@ -71,10 +73,10 @@ namespace Sobczal.Picturify.Core.Processing.Filters.EdgeBehaviour
                 {
                     for (var k = 0; k < depthArr; k++)
                     {
-                        arr[i, j, k] = arr[rangeX, rangeY, k];
-                        arr[i, heightArr - j - 1, k] = arr[rangeX, heightArr - 1 - rangeY, k];
-                        arr[widthArr - i - 1, j, k] = arr[widthArr - 1 - rangeY, rangeY, k];
-                        arr[widthArr - i - 1, heightArr - j - 1, k] = arr[widthArr - 1 - rangeY, heightArr - 1 - rangeY, k];
+                        arr[i, j, k] = pixels[widthPx - rangeX + i, heightPx - rangeY + j, k];
+                        arr[i, heightArr - j - 1, k] = pixels[widthPx - rangeX + i, rangeY - j, k];
+                        arr[widthArr - i - 1, j, k] = pixels[rangeX - i, heightPx - rangeY + j, k];
+                        arr[widthArr - i - 1, heightArr - j - 1, k] = pixels[rangeX - i, rangeY - j, k];
                     }
                 }
             }
@@ -87,12 +89,12 @@ namespace Sobczal.Picturify.Core.Processing.Filters.EdgeBehaviour
                 {
                     for (var k = 0; k < depthArr; k++)
                     {
-                        arr[i, j, k] = arr[i, rangeY, k];
-                        arr[i, heightArr - 1 - j, k] = arr[i, heightArr - 1 - rangeY, k];
+                        arr[i, j, k] = pixels[i - rangeX, heightPx - rangeY + j - 1, k];
+                        arr[i, heightArr - 1 - j, k] = pixels[i - rangeX, rangeY - j, k];
                     }
                 }
             }
-
+            
             //vertical edges
             for (var i = 0; i < rangeX; i++)
             {
@@ -100,8 +102,8 @@ namespace Sobczal.Picturify.Core.Processing.Filters.EdgeBehaviour
                 {
                     for (var k = 0; k < depthArr; k++)
                     {
-                        arr[i, j, k] = arr[rangeX, j, k];
-                        arr[widthArr - i - 1, j, k] = arr[widthArr - rangeX - 1, j, k];
+                        arr[i, j, k] = pixels[widthPx - rangeX + i - 1, j - rangeY, k];
+                        arr[widthArr - i - 1, j, k] = pixels[rangeX - i, j - rangeY, k];
                     }
                 }
             }
@@ -145,10 +147,10 @@ namespace Sobczal.Picturify.Core.Processing.Filters.EdgeBehaviour
                 {
                     for (var k = 0; k < depthArr; k++)
                     {
-                        arr[i, j, k] = arr[rangeX, rangeY, k];
-                        arr[i, heightArr - 1 - j, k] = arr[rangeX, heightArr - 1 - rangeY, k];
-                        arr[widthArr - i - 1, j, k] = arr[widthArr - 1 - rangeY, rangeY, k];
-                        arr[widthArr - i - 1, heightArr - j - 1, k] = arr[widthArr - 1 - rangeY, heightArr - 1 - rangeY, k];
+                        arr[i, j, k] = pixels[widthPx - rangeX + i, heightPx - rangeY + j, k];
+                        arr[i, heightArr - j - 1, k] = pixels[widthPx - rangeX + i, rangeY - j, k];
+                        arr[widthArr - i - 1, j, k] = pixels[rangeX - i, heightPx - rangeY + j, k];
+                        arr[widthArr - i - 1, heightArr - j - 1, k] = pixels[rangeX - i, rangeY - j, k];
                     }
                 }
             }
@@ -161,12 +163,12 @@ namespace Sobczal.Picturify.Core.Processing.Filters.EdgeBehaviour
                 {
                     for (var k = 0; k < depthArr; k++)
                     {
-                        arr[i, j, k] = arr[i, rangeY, k];
-                        arr[i, heightArr - 1 - j, k] = arr[i, heightArr - 1 - rangeY, k];
+                        arr[i, j, k] = pixels[i - rangeX, heightPx - rangeY + j - 1, k];
+                        arr[i, heightArr - 1 - j, k] = pixels[i - rangeX, rangeY - j, k];
                     }
                 }
             }
-
+            
             //vertical edges
             for (var i = 0; i < rangeX; i++)
             {
@@ -174,8 +176,8 @@ namespace Sobczal.Picturify.Core.Processing.Filters.EdgeBehaviour
                 {
                     for (var k = 0; k < depthArr; k++)
                     {
-                        arr[i, j, k] = arr[rangeX, j, k];
-                        arr[widthArr - i - 1, j, k] = arr[widthArr - rangeX - 1, j, k];
+                        arr[i, j, k] = pixels[widthPx - rangeX + i - 1, j - rangeY, k];
+                        arr[widthArr - i - 1, j, k] = pixels[rangeX - i, j - rangeY, k];
                     }
                 }
             }

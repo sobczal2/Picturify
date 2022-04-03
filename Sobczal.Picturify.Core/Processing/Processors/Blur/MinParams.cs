@@ -6,6 +6,5 @@ namespace Sobczal.Picturify.Core.Processing.Blur
     {
         public PSize PSize { get; set; } = new PSize(7, 7);
         public EdgeBehaviourSelector.Type EdgeBehaviourType { get; set; }
-        public ChannelSelector ChannelSelector { get; set; }
     }
 }
