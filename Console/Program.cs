@@ -13,7 +13,7 @@ namespace Console
         public static async Task Main(string[] args)
         {
             var sw = new Stopwatch();
-            var fastImage = FastImageFactory.FromFile(@"C:\dev\dotnet\libs\DataAndAlgorithms\Image\PicturifyExamples\mountain.jpg");
+            var fastImage = FastImageFactory.FromFile(@"C:\dev\dotnet\libs\DataAndAlgorithms\Image\PicturifyExamples\mountain.jpg", FastImageFactory.Version.Float);
             sw.Start();
             // var beforeB = new BeforeProcessorB(new EmptyProcessorParams()).AddFilter(
             //     EdgeBehaviourSelector.GetFilter(EdgeBehaviourSelector.Type.Wrap, new PSize(500, 500)));

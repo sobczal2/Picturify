@@ -13,6 +13,12 @@ namespace Sobczal.Picturify.Core.Data
     /// <summary>
     /// Class representing image using 32 BGRA format
     /// </summary>
+    /// <example>
+    /// To create <see cref="FastImageB"/> use <see cref="FastImageFactory"/>:
+    /// <code>
+    /// var fastImage = FastImageFactory.FromFile(@"path", FastImageFactory.Version.Byte);
+    /// </code>
+    /// </example>
     public class FastImageB : FastImage<byte>
     {
         internal FastImageB(PSize pSize) : base(pSize)
@@ -23,6 +29,10 @@ namespace Sobczal.Picturify.Core.Data
         {
         }
         
+        /// <summary>
+        /// Creates <see cref="FastImageB"/> from <see cref="Image"/>.
+        /// </summary>
+        /// <param name="image"><see cref="Image"/> to create from.</param>
         internal FastImageB(Image image) : this(new PSize (image.Width, image.Height))
         {
             var widthInBytes = PSize.Width * 4;
@@ -38,12 +48,26 @@ namespace Sobczal.Picturify.Core.Data
                 {
                     for (var k = 0; k < 4; k++)
                     {
-                        _pixels[i, j, k] = arr[j * widthInBytes + i * 4 + 3-k];
+                        Pixels[i, j, k] = arr[j * widthInBytes + i * 4 + 3-k];
                     }
                 }
             });
         }
-
+        
+        /// <summary>
+        /// Creates <see cref="FastImageB"/> from file. Supported image types.
+        /// <list type="bullet">
+        /// <item>jpg</item>
+        /// <item>jpeg</item>
+        /// <item>png</item>
+        /// <item>tiff</item>
+        /// <item>bmp</item>
+        /// <item>gif</item>
+        /// <item>icon</item>
+        /// <item>ico</item>
+        /// </list>
+        /// </summary>
+        /// <param name="path">A string to image file.</param>
         internal FastImageB(string path) : this(Image.FromFile(path))
         {
         }
@@ -54,7 +78,7 @@ namespace Sobczal.Picturify.Core.Data
             var arr = new byte[widthInBytes * PSize.Height];
             var po = new ParallelOptions();
             po.CancellationToken = cancellationToken;
-            var depth = _pixels.GetLength(2);
+            var depth = Pixels.GetLength(2);
             Parallel.For(0, PSize.Width, po, i =>
             {
                 for (var j = 0; j < PSize.Height; j++)
@@ -63,7 +87,7 @@ namespace Sobczal.Picturify.Core.Data
                     {
                         for (var k = 0; k < 3; k++)
                         {
-                            arr[j * widthInBytes + i * 4 + k] = _pixels[i, j, 0];
+                            arr[j * widthInBytes + i * 4 + k] = Pixels[i, j, 0];
                         }
 
                         arr[j * widthInBytes + i * 4 + 3] = 255;
@@ -72,7 +96,7 @@ namespace Sobczal.Picturify.Core.Data
                     {
                         for (var k = 0; k < 4; k++)
                         {
-                            arr[j * widthInBytes + i * 4 + k] = _pixels[i, j, 3-k];
+                            arr[j * widthInBytes + i * 4 + k] = Pixels[i, j, 3-k];
                         }
                     }
                 }
@@ -94,10 +118,10 @@ namespace Sobczal.Picturify.Core.Data
             {
                 for (var j = 0; j < PSize.Height; j++)
                 {
-                    arr[i, j, 0] = (byte) (_pixels[i, j, 1] * 0.3f + _pixels[i, j, 2] * 0.59f + _pixels[i, j, 3] * 0.11f);
+                    arr[i, j, 0] = (byte) (Pixels[i, j, 1] * 0.3f + Pixels[i, j, 2] * 0.59f + Pixels[i, j, 3] * 0.11f);
                 }
             });
-            _pixels = arr;
+            Pixels = arr;
             return this;
         }
         
@@ -113,18 +137,18 @@ namespace Sobczal.Picturify.Core.Data
                     arr[i, j, 0] = 255;
                     for (var k = 1; k < 4; k++)
                     {
-                        arr[i, j, k] = _pixels[i, j, 0];
+                        arr[i, j, k] = Pixels[i, j, 0];
                     }
                 }
             });
-            _pixels = arr;
+            Pixels = arr;
             return this;
         }
         
         public override IFastImage Process(Func<byte[,,], CancellationToken, byte[,,]> processingFunction,
             CancellationToken cancellationToken)
         {
-            _pixels = processingFunction(_pixels, cancellationToken);
+            Pixels = processingFunction(Pixels, cancellationToken);
             return this;
         }
 
@@ -132,7 +156,7 @@ namespace Sobczal.Picturify.Core.Data
         {
             if (!areaSelector.Validate(PSize))
                 throw new ArgumentException("All values must be in bounds of original image.");
-            var depth = _pixels.GetLength(2);
+            var depth = Pixels.GetLength(2);
             var arr = new byte[areaSelector.Width, areaSelector.Height, depth];
             Parallel.For(0, areaSelector.Width, i =>
             {
@@ -140,19 +164,19 @@ namespace Sobczal.Picturify.Core.Data
                 {
                     for (var k = 0; k < depth; k++)
                     {
-                        arr[i, j, k] = _pixels[i + areaSelector.Left, j + areaSelector.Bottom, k];
+                        arr[i, j, k] = Pixels[i + areaSelector.Left, j + areaSelector.Bottom, k];
                     }
                 }
             });
-            _pixels = arr;
+            Pixels = arr;
             return this;
         }
         
         public override IFastImage GetCopy()
         {
-            var depth = _pixels.GetLength(2);
+            var depth = Pixels.GetLength(2);
             var copiedArray = new byte[PSize.Width, PSize.Height, depth];
-            Array.Copy(_pixels, copiedArray, _pixels.Length);
+            Array.Copy(Pixels, copiedArray, Pixels.Length);
             return new FastImageB(copiedArray);
         }
 
@@ -166,14 +190,14 @@ namespace Sobczal.Picturify.Core.Data
         {
             var sw = new Stopwatch();
             sw.Start();
-            var arr = new float[_pixels.GetLength(0), _pixels.GetLength(1), _pixels.GetLength(2)];
-            Parallel.For(0, _pixels.GetLength(0), i =>
+            var arr = new float[Pixels.GetLength(0), Pixels.GetLength(1), Pixels.GetLength(2)];
+            Parallel.For(0, Pixels.GetLength(0), i =>
             {
-                for (var j = 0; j < _pixels.GetLength(1); j++)
+                for (var j = 0; j < Pixels.GetLength(1); j++)
                 {
-                    for (var k = 0; k < _pixels.GetLength(2); k++)
+                    for (var k = 0; k < Pixels.GetLength(2); k++)
                     {
-                        arr[i, j, k] = _pixels[i, j, k] / 255.0f;
+                        arr[i, j, k] = Pixels[i, j, k] / 255.0f;
                     }
                 }
             });
