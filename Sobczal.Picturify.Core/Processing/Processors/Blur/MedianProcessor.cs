@@ -10,17 +10,14 @@ namespace Sobczal.Picturify.Core.Processing.Blur
         private readonly int _tillMedian;
         public MedianProcessor(MedianParams processorParams) : base(processorParams)
         {
-            _tillMedian = ProcessorParams.PSize.Width * ProcessorParams.PSize.Height / 2;
+            _tillMedian = (ProcessorParams.Range.Width * 2 + 1) * (ProcessorParams.Range.Height * 2 + 1) / 2;
         }
 
         public override IFastImage Process(IFastImage fastImage, CancellationToken cancellationToken)
         {
-            var rbp = new RollingBucketProcessor(new RollingBucketParams
-            {
-                CalculateOneFunc = ProcessCalculateOne, ChannelSelector = ProcessorParams.ChannelSelector,
-                PSize = ProcessorParams.PSize, EdgeBehaviourType = ProcessorParams.EdgeBehaviourType,
-                WorkingArea = ProcessorParams.WorkingArea
-            });
+            var rbp = new RollingBucketProcessor(new RollingBucketParams(ProcessorParams.ChannelSelector,
+                ProcessorParams.Range, ProcessCalculateOne, ProcessorParams.EdgeBehaviourType,
+                ProcessorParams.WorkingArea));
             fastImage.ExecuteProcessor(rbp);
             return base.Process(fastImage, cancellationToken);
         }

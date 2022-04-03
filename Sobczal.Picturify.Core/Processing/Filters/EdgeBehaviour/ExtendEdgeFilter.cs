@@ -10,13 +10,11 @@ namespace Sobczal.Picturify.Core.Processing.Filters.EdgeBehaviour
 {
     public class ExtendEdgeFilter : BaseFilter
     {
-        private readonly PSize _kernelPSize;
+        private readonly PSize _range;
 
-        public ExtendEdgeFilter(PSize kernelPSize)
+        public ExtendEdgeFilter(PSize range)
         {
-            if (kernelPSize.Width % 2 != 1 || kernelPSize.Height % 2 != 1)
-                throw new ArgumentException("Kernel size must be 2n+1x2n+1.");
-            _kernelPSize = kernelPSize;
+            _range = range;
         }
         public override IFastImage Before(IFastImage fastImage, ProcessorParams processorParams, CancellationToken cancellationToken)
         {
@@ -29,10 +27,7 @@ namespace Sobczal.Picturify.Core.Processing.Filters.EdgeBehaviour
                     fastImage = fastImageF.Process(BeforeProcessingFunctionF, cancellationToken);
                     break;
             }
-
-            var rangeX = _kernelPSize.Width / 2;
-            var rangeY = _kernelPSize.Height / 2;
-            processorParams.WorkingArea.AddBorder(rangeX, rangeY, rangeX, rangeY);
+            processorParams.WorkingArea.AddBorder(_range.Width, _range.Height, _range.Width, _range.Height);
             return base.Before(fastImage, processorParams, cancellationToken);
         }
 
@@ -40,8 +35,8 @@ namespace Sobczal.Picturify.Core.Processing.Filters.EdgeBehaviour
         {
             var sw = new Stopwatch();
             sw.Start();
-            var rangeX = _kernelPSize.Width / 2;
-            var rangeY = _kernelPSize.Height / 2;
+            var rangeX = _range.Width;
+            var rangeY = _range.Height;
             var arr = new float[pixels.GetLength(0) + 2 * rangeX, pixels.GetLength(1) + 2 * rangeY,
                 pixels.GetLength(2)];
             var po = new ParallelOptions();
@@ -114,8 +109,8 @@ namespace Sobczal.Picturify.Core.Processing.Filters.EdgeBehaviour
         {
             var sw = new Stopwatch();
             sw.Start();
-            var rangeX = _kernelPSize.Width / 2;
-            var rangeY = _kernelPSize.Height / 2;
+            var rangeX = _range.Width;
+            var rangeY = _range.Height;
             var arr = new byte[pixels.GetLength(0) + 2 * rangeX, pixels.GetLength(1) + 2 * rangeY,
                 pixels.GetLength(2)];
             var po = new ParallelOptions();
@@ -186,11 +181,11 @@ namespace Sobczal.Picturify.Core.Processing.Filters.EdgeBehaviour
 
         public override IFastImage After(IFastImage fastImage, ProcessorParams processorParams, CancellationToken cancellationToken)
         {
-            var areaSelector = new SquareAreaSelector(_kernelPSize.Width / 2, _kernelPSize.Height / 2,
-                fastImage.PSize.Width - _kernelPSize.Width / 2, fastImage.PSize.Height - _kernelPSize.Height / 2);
+            var areaSelector = new SquareAreaSelector(_range.Width, _range.Height,
+                fastImage.PSize.Width - _range.Width - 1, fastImage.PSize.Height - _range.Height - 1);
             fastImage.Crop(areaSelector);
-            var rangeX = _kernelPSize.Width / 2;
-            var rangeY = _kernelPSize.Height / 2;
+            var rangeX = _range.Width;
+            var rangeY = _range.Height;
             processorParams.WorkingArea.Crop(rangeX, rangeY, rangeX, rangeY);
             return base.After(fastImage, processorParams, cancellationToken);
         }

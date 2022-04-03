@@ -5,7 +5,13 @@ namespace Sobczal.Picturify.Core.Processing.Blur
 {
     public class MaxParams : ProcessorParams
     {
-        public PSize PSize { get; set; } = new PSize (7, 7);
+        public PSize Range { get; set; }
         public EdgeBehaviourSelector.Type EdgeBehaviourType { get; set; }
+
+        public MaxParams(ChannelSelector channelSelector, PSize range, EdgeBehaviourSelector.Type edgeBehaviourType = EdgeBehaviourSelector.Type.Extend, IAreaSelector workingArea = null) : base(workingArea, channelSelector)
+        {
+            Range = range;
+            EdgeBehaviourType = edgeBehaviourType;
+        }
     }
 }

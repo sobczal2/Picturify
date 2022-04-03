@@ -6,7 +6,7 @@ using Sobczal.Picturify.Core.Data;
 
 namespace Sobczal.Picturify.Core.Processing.Filters
 {
-    public class BaseFilter
+    public abstract class BaseFilter
     {
         public virtual IFastImage Before(IFastImage fastImage, ProcessorParams processorParams, CancellationToken cancellationToken)
         {

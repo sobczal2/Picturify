@@ -14,7 +14,7 @@ namespace Sobczal.Picturify.Core.Processing.Standard
         {
             if (processorParams.ChannelSelector is null || processorParams.CalculateOneFunc is null)
                 throw new ArgumentNullException(nameof(processorParams), "Processor param members can't be null.");
-            AddFilter(EdgeBehaviourSelector.GetFilter(processorParams.EdgeBehaviourType, processorParams.PSize));
+            AddFilter(EdgeBehaviourSelector.GetFilter(processorParams.EdgeBehaviourType, processorParams.Range));
         }
 
         public override IFastImage Process(IFastImage fastImage, CancellationToken cancellationToken)
@@ -35,8 +35,8 @@ namespace Sobczal.Picturify.Core.Processing.Standard
             {
                 CancellationToken = cancellationToken
             };
-            var rangeX = ProcessorParams.PSize.Width / 2;
-            var rangeY = ProcessorParams.PSize.Height / 2;
+            var rangeX = ProcessorParams.Range.Width;
+            var rangeY = ProcessorParams.Range.Height;
             if(depth == 1) ProcessorParams.ChannelSelector = ChannelSelector.A;
             var bounds = ProcessorParams.WorkingArea.GetBounds();
             Parallel.For(bounds.left, bounds.right, po, i =>

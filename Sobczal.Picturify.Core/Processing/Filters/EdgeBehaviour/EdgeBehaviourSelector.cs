@@ -16,14 +16,14 @@ namespace Sobczal.Picturify.Core.Utils
             AvoidOverlap
         }
 
-        public static BaseFilter GetFilter(Type type, PSize kernelPSize)
+        public static BaseFilter GetFilter(Type type, PSize range)
         {
             switch (type)
             {
                 case Type.Extend:
-                    return new ExtendEdgeFilter(kernelPSize);
+                    return new ExtendEdgeFilter(range);
                 case Type.Wrap:
-                    return new WrapEdgeFilter(kernelPSize);
+                    return new WrapEdgeFilter(range);
                 default:
                     throw new NotImplementedException();
             }

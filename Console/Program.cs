@@ -13,16 +13,17 @@ namespace Console
         public static async Task Main(string[] args)
         {
             var sw = new Stopwatch();
-            var fastImage = FastImageFactory.FromFile(@"D:\dev\dotnet\libraries\images\PicturifyExamples\mountain.jpg");
+            var fastImage = FastImageFactory.FromFile(@"C:\dev\dotnet\libs\DataAndAlgorithms\Image\PicturifyExamples\mountain.jpg");
             sw.Start();
-            var beforeB = new BeforeProcessorB(new EmptyProcessorParams()).AddFilter(
-                EdgeBehaviourSelector.GetFilter(EdgeBehaviourSelector.Type.Wrap, new PSize(3841, 2161)));
-            var beforeF = new BeforeProcessorF(new EmptyProcessorParams()).AddFilter(
-                EdgeBehaviourSelector.GetFilter(EdgeBehaviourSelector.Type.Wrap, new PSize(3841, 2161)));
-            fastImage.ExecuteProcessor(beforeB).Save(@"D:\dev\dotnet\libraries\images\PicturifyExamples\outputB.jpg");
-            fastImage.ExecuteProcessor(beforeF).Save(@"D:\dev\dotnet\libraries\images\PicturifyExamples\outputF.jpg");
+            // var beforeB = new BeforeProcessorB(new EmptyProcessorParams()).AddFilter(
+            //     EdgeBehaviourSelector.GetFilter(EdgeBehaviourSelector.Type.Wrap, new PSize(500, 500)));
+            // var beforeF = new BeforeProcessorF(new EmptyProcessorParams()).AddFilter(
+            //     EdgeBehaviourSelector.GetFilter(EdgeBehaviourSelector.Type.Wrap, new PSize(500, 500)));
+            // fastImage.ExecuteProcessor(beforeB).Save(@"C:\dev\dotnet\libs\DataAndAlgorithms\Image\PicturifyExamples\outputB.jpg");
+            // fastImage.ExecuteProcessor(beforeF).Save(@"C:\dev\dotnet\libs\DataAndAlgorithms\Image\PicturifyExamples\outputF.jpg");
+            fastImage.ExecuteProcessor(new MedianProcessor(new MedianParams(ChannelSelector.RGB, new PSize(50, 2), EdgeBehaviourSelector.Type.Wrap)))
+                .Save(@"C:\dev\dotnet\libs\DataAndAlgorithms\Image\PicturifyExamples\output.jpg");
             sw.Stop();
-            fastImage.Save(@"D:\dev\dotnet\libraries\images\PicturifyExamples\output.jpg");
             System.Console.WriteLine(sw.ElapsedMilliseconds);
         }
     }
