@@ -21,7 +21,7 @@ namespace Console
             //     EdgeBehaviourSelector.GetFilter(EdgeBehaviourSelector.Type.Wrap, new PSize(500, 500)));
             // fastImage.ExecuteProcessor(beforeB).Save(@"C:\dev\dotnet\libs\DataAndAlgorithms\Image\PicturifyExamples\outputB.jpg");
             // fastImage.ExecuteProcessor(beforeF).Save(@"C:\dev\dotnet\libs\DataAndAlgorithms\Image\PicturifyExamples\outputF.jpg");
-            fastImage.ExecuteProcessor(new MedianProcessor(new MedianParams(ChannelSelector.RGB, new PSize(50, 2), EdgeBehaviourSelector.Type.Wrap)))
+            (await fastImage.ExecuteProcessorAsync(new MedianProcessor(new MedianParams(ChannelSelector.RGB, new PSize(50, 2), EdgeBehaviourSelector.Type.Wrap)), CancellationToken.None))
                 .Save(@"C:\dev\dotnet\libs\DataAndAlgorithms\Image\PicturifyExamples\output.jpg");
             sw.Stop();
             System.Console.WriteLine(sw.ElapsedMilliseconds);

@@ -21,10 +21,16 @@ namespace Sobczal.Picturify.Core.Data
     /// </example>
     public class FastImageF : FastImage<float>
     {
+        /// <summary>
+        /// Initialize image with no pixel data.
+        /// </summary>
         internal FastImageF(PSize pSize) : base(pSize)
         {
         }
 
+        /// <summary>
+        /// Initialize image with pixels.
+        /// </summary>
         internal FastImageF(float[,,] pixels) : base(pixels)
         {
         }
