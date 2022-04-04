@@ -19,6 +19,7 @@ namespace Sobczal.Picturify.Core.Data
         IFastImage ToArgb();
         IFastImage Crop(SquareAreaSelector areaSelector);
         IFastImage GetCopy();
+        IFastImage Resize(PSize size);
         FastImageB ToByteRepresentation();
         FastImageF ToFloatRepresentation();
     }

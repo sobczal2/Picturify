@@ -35,10 +35,11 @@ namespace Sobczal.Picturify.Core.Utils
         /// <param name="type">Desired <see cref="Type"/> of <see cref="BaseFilter"/></param>
         /// <param name="range">Desired range represented by <see cref="PSize"/> width is horizontal range - how much image kernel used
         /// in processing needs from left and right (if image kernel is 5x5, it needs 2px from left and 2px from right so horizontal range is 2). </param>
+        /// <param name="defaultValue">Default value for a pixel</param>
         /// <returns><see cref="BaseFilter"/> of adequate type, ready to use.</returns>
         /// <exception cref="NotImplementedException">thrown when <see cref="BaseFilter"/> of
         /// <see cref="Type"/> is not yet implemented.</exception>
-        public static BaseFilter GetFilter(Type type, PSize range)
+        public static BaseFilter GetFilter(Type type, PSize range, PixelColor defaultValue = null)
         {
             switch (type)
             {
@@ -46,6 +47,10 @@ namespace Sobczal.Picturify.Core.Utils
                     return new ExtendEdgeFilter(range);
                 case Type.Wrap:
                     return new WrapEdgeFilter(range);
+                case Type.Mirror:
+                    return new MirrorEdgeFilter(range);
+                case Type.Constant:
+                    return new ConstantEdgeFilter(range, defaultValue);
                 default:
                     throw new NotImplementedException();
             }

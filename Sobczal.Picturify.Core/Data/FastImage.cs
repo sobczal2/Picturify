@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Sobczal.Picturify.Core.Utils;
@@ -191,6 +193,8 @@ namespace Sobczal.Picturify.Core.Data
         /// <returns><see cref="Bitmap"/> containing image from this <see cref="FastImage{T}"/></returns>
         protected abstract Bitmap GetBitmap(CancellationToken cancellationToken);
 
+        protected abstract void SetPixelsFromBitmap(Bitmap bitmap, CancellationToken cancellationToken);
+
         /// <summary>
         /// Gets <see cref="ImageFormat"/> from path (file extension). Available extensions:
         /// <list type="bullet">
@@ -287,7 +291,19 @@ namespace Sobczal.Picturify.Core.Data
         /// </summary>
         /// <returns>Copied <see cref="FastImage{T}"/></returns>
         public abstract IFastImage GetCopy();
-        
+
+        public IFastImage Resize(PSize size)
+        {
+            var sw = new Stopwatch();
+            sw.Start();
+            var bitmap = GetBitmap(CancellationToken.None);
+            var bitmap2 = new Bitmap(bitmap, new Size(size.Width, size.Height));
+            SetPixelsFromBitmap(bitmap2, CancellationToken.None);
+            sw.Stop();
+            PicturifyConfig.LogTime($"{GetType().Name}.{MethodBase.GetCurrentMethod().Name}", sw.ElapsedMilliseconds);
+            return this;
+        }
+
         /// <summary>
         /// Converts this <see cref="FastImage{T}"/> to <see cref="FastImageB"/>.
         /// If it already is instance of <see cref="FastImageB"/> does nothing.

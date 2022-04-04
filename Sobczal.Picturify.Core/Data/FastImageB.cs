@@ -19,7 +19,7 @@ namespace Sobczal.Picturify.Core.Data
     /// var fastImage = FastImageFactory.FromFile(@"path", FastImageFactory.Version.Byte);
     /// </code>
     /// </example>
-    public class FastImageB : FastImage<byte>
+    public sealed class FastImageB : FastImage<byte>
     {
         /// <summary>
         /// Initialize image with no pixel data.
@@ -41,23 +41,8 @@ namespace Sobczal.Picturify.Core.Data
         /// <param name="image"><see cref="Image"/> to create from.</param>
         internal FastImageB(Image image) : this(new PSize (image.Width, image.Height))
         {
-            var widthInBytes = PSize.Width * 4;
             var bitmap = new Bitmap(image);
-            var arr = new byte[widthInBytes * PSize.Height];
-            var bitmapData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly,
-                bitmap.PixelFormat);
-            var ptr = bitmapData.Scan0;
-            Marshal.Copy(ptr, arr, 0, arr.Length);
-            Parallel.For(0, PSize.Width, i =>
-            {
-                for (var j = 0; j < PSize.Height; j++)
-                {
-                    for (var k = 0; k < 4; k++)
-                    {
-                        Pixels[i, j, k] = arr[j * widthInBytes + i * 4 + 3-k];
-                    }
-                }
-            });
+            SetPixelsFromBitmap(bitmap, CancellationToken.None);
         }
         
         /// <summary>
@@ -112,9 +97,34 @@ namespace Sobczal.Picturify.Core.Data
                 bitmap.PixelFormat);
             var ptr = bitmapData.Scan0;
             Marshal.Copy(arr, 0, ptr, arr.Length);
+            bitmap.UnlockBits(bitmapData);
             return bitmap;
         }
-        
+
+        protected override void SetPixelsFromBitmap(Bitmap bitmap, CancellationToken cancellationToken)
+        {
+            var width = bitmap.Width;
+            var height = bitmap.Height;
+            var widthInBytes = width * 4;
+            var arr = new byte[widthInBytes * height];
+            var bitmapData = bitmap.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly,
+                bitmap.PixelFormat);
+            var ptr = bitmapData.Scan0;
+            Marshal.Copy(ptr, arr, 0, arr.Length);
+            bitmap.UnlockBits(bitmapData);
+            Pixels = new byte[width, height, Pixels.GetLength(2)];
+            Parallel.For(0, width, i =>
+            {
+                for (var j = 0; j < height; j++)
+                {
+                    for (var k = 0; k < 4; k++)
+                    {
+                        Pixels[i, j, k] = arr[j * widthInBytes + i * 4 + 3-k];
+                    }
+                }
+            });
+        }
+
         public override IFastImage ToGrayscale()
         {
             if (Grayscale)
