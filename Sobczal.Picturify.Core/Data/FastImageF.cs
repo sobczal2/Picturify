@@ -171,7 +171,7 @@ namespace Sobczal.Picturify.Core.Data
 
         public override IFastImage Crop(SquareAreaSelector areaSelector)
         {
-            if (!areaSelector.Validate(PSize))
+            if (areaSelector.LeftInclusive < 0 || areaSelector.RightExclusive >= PSize.Width || areaSelector.BotInclusive < 0 || areaSelector.TopExclusive >= PSize.Height)
                 throw new ArgumentException("All values must be in bounds of original image.");
             var depth = Pixels.GetLength(2);
             var arr = new float[areaSelector.Width, areaSelector.Height, depth];
@@ -181,7 +181,7 @@ namespace Sobczal.Picturify.Core.Data
                 {
                     for (var k = 0; k < depth; k++)
                     {
-                        arr[i, j, k] = Pixels[i + areaSelector.Left, j + areaSelector.Bottom, k];
+                        arr[i, j, k] = Pixels[i + areaSelector.LeftInclusive, j + areaSelector.BotInclusive, k];
                     }
                 }
             });

@@ -9,5 +9,23 @@
             Width = width;
             Height = height;
         }
+
+        public bool Equals(PSize other)
+        {
+            return Width == other.Width && Height == other.Height;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is PSize other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (Width * 397) ^ Height;
+            }
+        }
     }
 }

@@ -4,53 +4,60 @@ namespace Sobczal.Picturify.Core.Utils
 {
     public class SquareAreaSelector : IAreaSelector
     {
-        public int Left { get; private set; }
-        public int Bottom { get; private set; }
-        public int Right { get; private set; }
-        public int Top { get; private set; }
+        //first index from left edited
 
-        public int Width => Right - Left + 1;
-        public int Height => Top - Bottom + 1;
+        public int LeftInclusive { get; private set; }
+        public int RightExclusive { get; private set; }
+        public int BotInclusive { get; private set; }
+        public int TopExclusive { get; private set; }
 
-        public SquareAreaSelector(int left, int bottom, int right, int top)
+        public int Width => RightExclusive - LeftInclusive;
+        public int Height => TopExclusive - BotInclusive;
+
+        public SquareAreaSelector(int leftInclusive, int rightExclusive, int botInclusive, int topExclusive)
         {
-            if (left >= right || bottom >= top)
-                throw new ArgumentException("left must be bigger than right, top must be bigger than bottom");
-            Left = left;
-            Bottom = bottom;
-            Right = right;
-            Top = top;
+            if (leftInclusive < 0 || rightExclusive < 0 || botInclusive < 0 || topExclusive < 0)
+                throw new ArgumentException("Invalid arguments");
+            LeftInclusive = leftInclusive;
+            RightExclusive = rightExclusive;
+            BotInclusive = botInclusive;
+            TopExclusive = topExclusive;
         }
         public bool ShouldEdit(int x, int y)
         {
-            return x >= Left && x <= Right && y <= Top && y >= Bottom;
+            return x >= LeftInclusive && x < RightExclusive && y >= BotInclusive &&
+                   y < TopExclusive;
         }
 
-        public void AddBorder(int left, int bottom, int right, int top)
+        public void Resize(int left, int right, int bot, int top)
         {
-            Left += left;
-            Right += left;
-            Bottom += bottom;
-            Top += bottom;
+            if (left + LeftInclusive < 0 || right + RightExclusive < 0 || bot + BotInclusive < 0 ||
+                top + TopExclusive < 0)
+                throw new ArgumentException("Argumants invalid.");
+            LeftInclusive += left;
+            RightExclusive += right;
+            BotInclusive += bot;
+            TopExclusive += top;
         }
 
-        public void Crop(int left, int bottom, int right, int top)
+        public void Resize(int horizontal, int vertical)
         {
-            Left -= left;
-            Right -= left;
-            Bottom -= bottom;
-            Top -= bottom;
+            Resize(horizontal, horizontal, vertical, vertical);
+        }
+        
+        public void Validate(PSize pSize)
+        {
+            LeftInclusive = Math.Max(0, LeftInclusive);
+            BotInclusive = Math.Max(0, BotInclusive);
+            RightExclusive = Math.Min(pSize.Width, RightExclusive);
+            TopExclusive = Math.Min(pSize.Height, TopExclusive);
+            if (LeftInclusive > RightExclusive || BotInclusive > TopExclusive)
+                throw new ArgumentException("Invalid area selector.");
         }
 
-        public bool Validate(PSize pSize)
+        public SquareAreaSelector AsSquareAreaSelector()
         {
-            return Left >= 0 && Right < pSize.Width && Bottom >= 0 && Top <= pSize.Height && Left < Right &&
-                   Bottom < Top;
-        }
-
-        public (int left, int bottom, int right, int top) GetBounds()
-        {
-            return (Left, Bottom, Right, Top);
+            return this;
         }
     }
 }

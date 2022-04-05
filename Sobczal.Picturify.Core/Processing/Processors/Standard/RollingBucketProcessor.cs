@@ -38,8 +38,8 @@ namespace Sobczal.Picturify.Core.Processing.Standard
             var rangeX = ProcessorParams.Range.Width;
             var rangeY = ProcessorParams.Range.Height;
             if(depth == 1) ProcessorParams.ChannelSelector = ChannelSelector.A;
-            var bounds = ProcessorParams.WorkingArea.GetBounds();
-            Parallel.For(bounds.left, bounds.right, po, i =>
+            var area = ProcessorParams.WorkingArea;
+            Parallel.For(area.LeftInclusive, area.RightExclusive, po, i =>
             {
                 if (buckets.Value is null) buckets.Value = new ushort[256, depth];
                 for (var j = 0; j < 256; j++)
@@ -52,7 +52,7 @@ namespace Sobczal.Picturify.Core.Processing.Standard
                 
                 for (var l = -rangeX; l <= rangeX; l++)
                 {
-                    for (var j = bounds.bottom - rangeY; j < bounds.bottom; j++)
+                    for (var j = area.BotInclusive - rangeY; j < area.BotInclusive; j++)
                     {
                         for (var c = 0; c < depth; c++)
                         {
@@ -63,7 +63,7 @@ namespace Sobczal.Picturify.Core.Processing.Standard
                 }
                 for (var l = -rangeX; l <= rangeX; l++)
                 {
-                    for (var j = bounds.bottom - rangeY; j <= bounds.bottom; j++)
+                    for (var j = area.BotInclusive - rangeY; j <= area.BotInclusive; j++)
                     {
                         for (var c = 0; c < depth; c++)
                         {
@@ -76,9 +76,9 @@ namespace Sobczal.Picturify.Core.Processing.Standard
                 for (byte c = 0; c < depth; c++)
                 {
                     if (!ProcessorParams.ChannelSelector.Used(c) || !ProcessorParams.WorkingArea.ShouldEdit(i, rangeY)) continue;
-                    tempArr[i, bounds.bottom, c] = ProcessorParams.CalculateOneFunc(buckets.Value, c);
+                    tempArr[i, area.BotInclusive, c] = ProcessorParams.CalculateOneFunc(buckets.Value, c);
                 }
-                for (var j = bounds.bottom + 1; j < bounds.top; j++)
+                for (var j = area.BotInclusive + 1; j < area.TopExclusive; j++)
                 {
                     for (var l = -rangeX; l <= rangeX; l++)
                     {

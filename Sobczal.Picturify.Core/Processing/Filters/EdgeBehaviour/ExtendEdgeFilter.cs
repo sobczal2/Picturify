@@ -27,7 +27,7 @@ namespace Sobczal.Picturify.Core.Processing.Filters.EdgeBehaviour
                     fastImage = fastImageF.Process(BeforeProcessingFunctionF, cancellationToken);
                     break;
             }
-            processorParams.WorkingArea.AddBorder(_range.Width, _range.Height, _range.Width, _range.Height);
+            processorParams.WorkingArea.Resize(_range.Width, _range.Height);
             return base.Before(fastImage, processorParams, cancellationToken);
         }
 
@@ -181,12 +181,9 @@ namespace Sobczal.Picturify.Core.Processing.Filters.EdgeBehaviour
 
         public override IFastImage After(IFastImage fastImage, ProcessorParams processorParams, CancellationToken cancellationToken)
         {
-            var areaSelector = new SquareAreaSelector(_range.Width, _range.Height,
-                fastImage.PSize.Width - _range.Width - 1, fastImage.PSize.Height - _range.Height - 1);
-            fastImage.Crop(areaSelector);
-            var rangeX = _range.Width;
-            var rangeY = _range.Height;
-            processorParams.WorkingArea.Crop(rangeX, rangeY, rangeX, rangeY);
+            processorParams.WorkingArea.Resize(-_range.Width, -_range.Height);
+            fastImage.Crop(new SquareAreaSelector(_range.Width, fastImage.PSize.Width - _range.Width, _range.Height,
+                fastImage.PSize.Height - _range.Height));
             return base.After(fastImage, processorParams, cancellationToken);
         }
     }

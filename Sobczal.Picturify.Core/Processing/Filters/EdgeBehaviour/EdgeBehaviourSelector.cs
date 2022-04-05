@@ -24,8 +24,7 @@ namespace Sobczal.Picturify.Core.Utils
             Wrap,
             Mirror,
             Crop,
-            Constant,
-            AvoidOverlap
+            Constant
         }
 
         /// <summary>
@@ -49,6 +48,8 @@ namespace Sobczal.Picturify.Core.Utils
                     return new WrapEdgeFilter(range);
                 case Type.Mirror:
                     return new MirrorEdgeFilter(range);
+                case Type.Crop:
+                    return new CropEdgeFilter(range);
                 case Type.Constant:
                     return new ConstantEdgeFilter(range, defaultValue);
                 default:

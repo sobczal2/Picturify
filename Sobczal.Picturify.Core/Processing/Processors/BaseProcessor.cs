@@ -30,7 +30,11 @@ namespace Sobczal.Picturify.Core.Processing
             else throw new NotSupportedException($"Image of type {imageType} is not supported.");
             if (ProcessorParams.WorkingArea is null)
                 ProcessorParams.WorkingArea =
-                    new SquareAreaSelector(0, 0, fastImage.PSize.Width, fastImage.PSize.Height);
+                    new SquareAreaSelector(0, fastImage.PSize.Width, 0, fastImage.PSize.Height);
+            else
+            {
+                ProcessorParams.WorkingArea.Validate(fastImage.PSize);
+            }
             for (var i = 0; i < _filters.Count; i++)
             {
                 fastImage = _filters[i].Before(fastImage, ProcessorParams, cancellationToken);

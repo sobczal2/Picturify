@@ -3,8 +3,13 @@
     public interface IAreaSelector
     {
         bool ShouldEdit(int x, int y);
-        void AddBorder(int left, int bottom, int right, int top);
-        void Crop(int left, int bottom, int right, int top);
-        (int left, int bottom, int right, int top) GetBounds();
+        void Resize(int left, int right, int bot, int top);
+        void Resize(int horizontal, int vertical);
+        SquareAreaSelector AsSquareAreaSelector();
+        void Validate(PSize pSize);
+        int LeftInclusive { get; }
+        int RightExclusive { get; }
+        int BotInclusive { get; }
+        int TopExclusive { get; }
     }
 }
