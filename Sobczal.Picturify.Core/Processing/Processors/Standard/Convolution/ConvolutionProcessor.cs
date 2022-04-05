@@ -6,21 +6,21 @@ using Sobczal.Picturify.Core.Utils;
 
 namespace Sobczal.Picturify.Core.Processing.Standard
 {
-    public class ConvolutionProcessorF : BaseProcessor<ConvolutionParams, FastImageF>
+    public class ConvolutionProcessor : BaseProcessor<ConvolutionParams, FastImageF>
     {
         /// <summary>
         /// Traditional convolution. Optimized for small convolution matrixes.
         /// </summary>
         /// <param name="processorParams"></param>
         /// <exception cref="ArgumentException"></exception>
-        public ConvolutionProcessorF(ConvolutionParams processorParams) : base(processorParams)
+        public ConvolutionProcessor(ConvolutionParams processorParams) : base(processorParams)
         {
             if (ProcessorParams.ConvolutionMatrix.GetLength(0) % 2 != 1 || ProcessorParams.ConvolutionMatrix.GetLength(0) < 1 ||
                 ProcessorParams.ConvolutionMatrix.GetLength(0) % 2 != 1 || ProcessorParams.ConvolutionMatrix.GetLength(0) < 1)
                 throw new ArgumentException("Matrix must be of size 2*n+1x2*m+1 and both dimensions must be > 0.",
                     nameof(ProcessorParams.ConvolutionMatrix));
-            var range = new PSize(processorParams.ConvolutionMatrix.GetLength(0),
-                processorParams.ConvolutionMatrix.GetLength(1));
+            var range = new PSize(processorParams.ConvolutionMatrix.GetLength(0) / 2,
+                processorParams.ConvolutionMatrix.GetLength(1) / 2);
             AddFilter(EdgeBehaviourSelector.GetFilter(processorParams.EdgeBehaviourType, range));
         }
 
