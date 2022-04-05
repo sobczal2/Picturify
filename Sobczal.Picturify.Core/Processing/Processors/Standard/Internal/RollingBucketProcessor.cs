@@ -12,7 +12,7 @@ namespace Sobczal.Picturify.Core.Processing.Standard
     {
         public RollingBucketProcessor(RollingBucketParams processorParams) : base(processorParams)
         {
-            if (processorParams.ChannelSelector is null || processorParams.CalculateOneFunc is null)
+            if (processorParams.CalculateOneFunc is null)
                 throw new ArgumentNullException(nameof(processorParams), "Processor param members can't be null.");
             AddFilter(EdgeBehaviourSelector.GetFilter(processorParams.EdgeBehaviourType, processorParams.Range));
         }

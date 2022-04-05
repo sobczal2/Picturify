@@ -78,7 +78,7 @@ namespace Sobczal.Picturify.Core.Data
                     {
                         for (var k = 0; k < 3; k++)
                         {
-                            arr[j * widthInBytes + i * 4 + k] = (byte) (Pixels[i, j, 0] * 255.0f);
+                            arr[j * widthInBytes + i * 4 + k] = (byte) Math.Max(Math.Min(Pixels[i, j, 0] * 255.0f, 255f), 0f);
                         }
 
                         arr[j * widthInBytes + i * 4 + 3] = 255;
@@ -87,10 +87,9 @@ namespace Sobczal.Picturify.Core.Data
                     {
                         for (var k = 0; k < 4; k++)
                         {
-                            arr[j * widthInBytes + i * 4 + k] = (byte) (Pixels[i, j, 3-k] * 255.0f);
+                            arr[j * widthInBytes + i * 4 + k] = (byte) Math.Max(Math.Min(Pixels[i, j, 3-k] * 255.0f, 255f), 0f);
                         }
                     }
-
                 }
             });
             var bitmap = new Bitmap(PSize.Width, PSize.Height);
@@ -113,7 +112,7 @@ namespace Sobczal.Picturify.Core.Data
             var ptr = bitmapData.Scan0;
             Marshal.Copy(ptr, arr, 0, arr.Length);
             bitmap.UnlockBits(bitmapData);
-            Pixels = new float[width, height, Pixels.GetLength(2)];
+            Pixels = new float[width, height, 4];
             Parallel.For(0, width, i =>
             {
                 for (var j = 0; j < height; j++)

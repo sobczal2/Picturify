@@ -1,8 +1,12 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Sobczal.Picturify.Core.Data;
 using Sobczal.Picturify.Core.Processing.Blur;
+using Sobczal.Picturify.Core.Processing.Standard;
+using Sobczal.Picturify.Core.Processing.Standard.Util;
 using Sobczal.Picturify.Core.Processing.Testing;
 using Sobczal.Picturify.Core.Utils;
 
@@ -13,7 +17,8 @@ namespace Console
         public static async Task Main(string[] args)
         {
             var sw = new Stopwatch();
-            var fastImage = FastImageFactory.FromFile(@"C:\dev\dotnet\libs\DataAndAlgorithms\Image\PicturifyExamples\mountain.jpg", FastImageFactory.Version.Byte).Resize(new PSize(1280, 720));
+            var fastImage = FastImageFactory.FromFile(@"C:\dev\dotnet\libs\DataAndAlgorithms\Image\PicturifyExamples\cyber.jpg", FastImageFactory.Version.Float);
+            var fastImage2 = FastImageFactory.FromFile(@"C:\dev\dotnet\libs\DataAndAlgorithms\Image\PicturifyExamples\merc.jpeg", FastImageFactory.Version.Byte).Resize(new PSize(1280, 720));
             sw.Start();
             // var beforeB = new BeforeProcessorB(new EmptyProcessorParams()).AddFilter(
             //     EdgeBehaviourSelector.GetFilter(EdgeBehaviourSelector.Type.Crop, new PSize(500, 500)));
@@ -21,7 +26,11 @@ namespace Console
             //     EdgeBehaviourSelector.GetFilter(EdgeBehaviourSelector.Type.Crop, new PSize(500, 500)));
             // fastImage.GetCopy().ExecuteProcessor(beforeB).Save(@"C:\dev\dotnet\libs\DataAndAlgorithms\Image\PicturifyExamples\outputB.jpg");
             // fastImage.GetCopy().ExecuteProcessor(beforeF).Save(@"C:\dev\dotnet\libs\DataAndAlgorithms\Image\PicturifyExamples\outputF.jpg");
-            (await fastImage.ExecuteProcessorAsync(new MaxProcessor(new MaxParams(ChannelSelector.RGB, new PSize(10, 10), EdgeBehaviourSelector.Type.Crop, new SquareAreaSelector(100, 1000, 100, 1000))), CancellationToken.None))
+            var procParams = new TwoChannelConvolutionParams(ChannelSelector.RGB,
+                new List<float[,]>() {new float[,] {{-1f, 0f, 1f}}, new float[,] {{1f}, {2f}, {1f}}},
+                new List<float[,]>() {new float[,] {{-1f}, {0f}, {1f}}, new float[,] {{1f, 2f, 1f}}},
+                ((in1, in2, channel) => (float) in1 * in1 + in2 * in2 > 0.5f ? 1.0f : 0f));
+            (await fastImage.ExecuteProcessorAsync(new TwoChannelConvolutionProcessorF(procParams), CancellationToken.None))
                 .Save(@"C:\dev\dotnet\libs\DataAndAlgorithms\Image\PicturifyExamples\output.jpg");
             sw.Stop();
             System.Console.WriteLine(sw.ElapsedMilliseconds);

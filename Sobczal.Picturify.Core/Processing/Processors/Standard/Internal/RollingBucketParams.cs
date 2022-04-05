@@ -11,7 +11,6 @@ namespace Sobczal.Picturify.Core.Processing.Standard
         /// </summary>
         public Func<ushort[,], byte, byte> CalculateOneFunc { get; set; }
         public EdgeBehaviourSelector.Type EdgeBehaviourType { get; set; }
-        public ChannelSelector ChannelSelector { get; set; }
 
         public RollingBucketParams(ChannelSelector channelSelector, PSize range,
             Func<ushort[,], byte, byte> calculateOneFunc, EdgeBehaviourSelector.Type edgeBehaviourType,

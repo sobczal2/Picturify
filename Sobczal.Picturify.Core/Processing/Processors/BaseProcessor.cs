@@ -17,6 +17,8 @@ namespace Sobczal.Picturify.Core.Processing
 
         public BaseProcessor(T processorParams)
         {
+            if (processorParams.ChannelSelector is null)
+                throw new ArgumentException("Can't be null", nameof(processorParams.ChannelSelector));
             _filters = new List<BaseFilter>();
             ProcessorParams = processorParams;
         }
