@@ -14,6 +14,7 @@ namespace Sobczal.Picturify.Core.Data
     public interface IFastImage
     {
         PSize PSize { get; }
+        bool Grayscale { get; }
         void Save(Stream stream, ImageFormat format);
         void Save(string path);
         Task SaveAsync(Stream stream, ImageFormat format, CancellationToken cancellationToken);

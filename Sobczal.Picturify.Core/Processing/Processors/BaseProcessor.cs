@@ -65,6 +65,8 @@ namespace Sobczal.Picturify.Core.Processing
             if (ProcessorParams.WorkingArea is null)
                 ProcessorParams.WorkingArea =
                     new SquareAreaSelector(0, fastImage.PSize.Width, 0, fastImage.PSize.Height);
+            // In grayscale image data is stored in alpha channel
+            if (fastImage.Grayscale) ProcessorParams.ChannelSelector = ChannelSelector.A;
             else
             {
                 ProcessorParams.WorkingArea.Validate(fastImage.PSize);

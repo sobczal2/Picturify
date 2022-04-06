@@ -16,7 +16,7 @@ namespace Console
     {
         public static async Task Main(string[] args)
         {
-            var fastImage = FastImageFactory.FromFile(@"C:\dev\dotnet\libs\DataAndAlgorithms\Image\PicturifyExamples\cyber.jpg");
+            var fastImage = FastImageFactory.FromFile(@"D:\dev\dotnet\libraries\images\PicturifyExamples\wtf.png");
             // var beforeB = new BeforeProcessorB(new EmptyProcessorParams()).AddFilter(
             //     EdgeBehaviourSelector.GetFilter(EdgeBehaviourSelector.Type.Crop, new PSize(500, 500)));
             // var beforeF = new BeforeProcessorF(new EmptyProcessorParams()).AddFilter(
@@ -29,7 +29,7 @@ namespace Console
                 (in1, in2, channel) => (float) Math.Sqrt(in1 * in1 + in2 * in2));
             fastImage.ExecuteProcessor(new TwoChannelConvolutionProcessor(procParams))
                 .ExecuteProcessor(new NormalisationProcessor(new NormalisationParams(ChannelSelector.RGB)))
-                .Save(@"C:\dev\dotnet\libs\DataAndAlgorithms\Image\PicturifyExamples\output.jpg");
+                .Save(@"D:\dev\dotnet\libraries\images\PicturifyExamples\output.jpg");
 
             // fastImage.ExecuteProcessor(new MaxProcessor(new MaxParams(ChannelSelector.RGB, new PSize(1, 1))))
                 // .Save(@"C:\dev\dotnet\libs\DataAndAlgorithms\Image\PicturifyExamples\output.jpg");
