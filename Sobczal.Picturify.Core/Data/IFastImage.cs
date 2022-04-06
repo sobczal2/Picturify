@@ -8,6 +8,9 @@ using Sobczal.Picturify.Core.Utils;
 
 namespace Sobczal.Picturify.Core.Data
 {
+    /// <summary>
+    /// Top of the FastImage hierarchy. Check <see cref="FastImage{T}"/> for info on methods.
+    /// </summary>
     public interface IFastImage
     {
         PSize PSize { get; }

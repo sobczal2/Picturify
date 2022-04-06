@@ -4,9 +4,9 @@ using Sobczal.Picturify.Core.Data;
 using Sobczal.Picturify.Core.Utils;
 using Xunit;
 
-namespace Sobczal.Picturify.Core.Tests.Data;
-
-public class FastImageFactoryTests
+namespace Sobczal.Picturify.Core.Tests.Data
+{
+    public class FastImageFactoryTests
 {
     [Theory]
     [InlineData(10, 10)]
@@ -105,9 +105,12 @@ public class FastImageFactoryTests
     private Bitmap CreateEmptyBitmap(int width, int height)
     {
         var bitmap = new Bitmap(width, height);
-        using var graphics = Graphics.FromImage(bitmap);
-        var rect = new Rectangle(0, 0, width, height);
-        graphics.FillRectangle(new SolidBrush(Color.FromArgb(0,0,0,0)), rect);
+        using (var graphics = Graphics.FromImage(bitmap))
+        {
+            var rect = new Rectangle(0, 0, width, height);
+            graphics.FillRectangle(new SolidBrush(Color.FromArgb(0,0,0,0)), rect);
+        }
         return bitmap;
     }
+}
 }

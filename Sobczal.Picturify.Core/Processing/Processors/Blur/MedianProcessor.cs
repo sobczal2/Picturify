@@ -5,6 +5,12 @@ using Sobczal.Picturify.Core.Processing.Standard;
 
 namespace Sobczal.Picturify.Core.Processing.Blur
 {
+    /// <summary>
+    /// <see cref="MedianProcessor"/> implements median filter on <see cref="FastImageB"/>.
+    /// This implementation operates on <see cref="FastImageB"/> instead of <see cref="FastImageF"/>,
+    /// because it uses <see cref="RollingBucketProcessor"/> which can't operate on <see cref="FastImageF"/> internally which is
+    /// much more performant than naive implementation. If you need floating point precision consider writing processor yourself ;).
+    /// </summary>
     public class MedianProcessor : BaseProcessor<MedianParams, FastImageB>
     {
         private readonly int _tillMedian;

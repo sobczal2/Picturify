@@ -193,6 +193,11 @@ namespace Sobczal.Picturify.Core.Data
         /// <returns><see cref="Bitmap"/> containing image from this <see cref="FastImage{T}"/></returns>
         protected abstract Bitmap GetBitmap(CancellationToken cancellationToken);
 
+        /// <summary>
+        /// Sets pixels in this image from provided <see cref="Bitmap"/>. Used in resize.
+        /// </summary>
+        /// <param name="bitmap">Source of image</param>
+        /// <param name="cancellationToken">For cancelling operation.</param>
         protected abstract void SetPixelsFromBitmap(Bitmap bitmap, CancellationToken cancellationToken);
 
         /// <summary>
@@ -291,9 +296,16 @@ namespace Sobczal.Picturify.Core.Data
         /// </summary>
         /// <returns>Copied <see cref="FastImage{T}"/></returns>
         public abstract IFastImage GetCopy();
-
+        
+        /// <summary>
+        /// Changes size of this <see cref="FastImage{T}"/> by stretching or squizing image.
+        /// (Does not crop sides. See <see cref="Crop"/> for that behaviour.
+        /// </summary>
+        /// <param name="size">Wanted size</param>
+        /// <returns>Resized <see cref="FastImage{T}"/></returns>
         public IFastImage Resize(PSize size)
         {
+            //TODO implement without using bitmap
             var sw = new Stopwatch();
             sw.Start();
             var bitmap = GetBitmap(CancellationToken.None);

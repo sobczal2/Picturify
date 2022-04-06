@@ -16,7 +16,7 @@ namespace Sobczal.Picturify.Core
         public static void ConfigureLogging()
         {
             var log = new LoggerConfiguration()
-                .MinimumLevel.Debug()
+                .MinimumLevel.Information()
                 .WriteTo.Console()
                 .CreateLogger();
             Log.Logger = log;
