@@ -5,6 +5,10 @@ namespace Sobczal.Picturify.Core.Tests.Processing.Processors.Blur
 {
     public class MedianProcessorTests : AbstractProcessorTests<MedianProcessor>
     {
+        public MedianProcessorTests()
+        {
+            UseExactNumersInPixels = false;
+        }
         protected override void PopulateChannelSelectorCheckProcessors()
         {
             ChannelSelectorCheckProcessor = new MedianProcessor(new MedianParams(ChannelSelector.ARGB, new PSize(5, 5),

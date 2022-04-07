@@ -5,6 +5,10 @@ namespace Sobczal.Picturify.Core.Tests.Processing.Processors.Blur
 {
     public class MinProcessorTests : AbstractProcessorTests<MinProcessor>
     {
+        public MinProcessorTests()
+        {
+            UseExactNumersInPixels = false;
+        }
         protected override void PopulateChannelSelectorCheckProcessors()
         {
             ChannelSelectorCheckProcessor = new MinProcessor(new MinParams(ChannelSelector.ARGB, new PSize(5, 5),

@@ -16,7 +16,7 @@ namespace Console
     {
         public static async Task Main(string[] args)
         {
-            var fastImage = FastImageFactory.FromFile(@"D:\dev\dotnet\libraries\images\PicturifyExamples\shapes.jpg");
+            var fastImage = FastImageFactory.FromFile(@"D:\dev\dotnet\libraries\images\PicturifyExamples\cyber.jpg");
             // var beforeB = new BeforeProcessorB(new EmptyProcessorParams()).AddFilter(
             //     EdgeBehaviourSelector.GetFilter(EdgeBehaviourSelector.Type.Crop, new PSize(500, 500)));
             // var beforeF = new BeforeProcessorF(new EmptyProcessorParams()).AddFilter(

@@ -5,6 +5,10 @@ namespace Sobczal.Picturify.Core.Tests.Processing.Processors.Standard.Internal
 {
     public class RollingBucketProcessorTests : AbstractProcessorTests<RollingBucketProcessor>
     {
+        public RollingBucketProcessorTests()
+        {
+            UseExactNumersInPixels = false;
+        }
         protected override void PopulateChannelSelectorCheckProcessors()
         {
             ChannelSelectorCheckProcessor = new RollingBucketProcessor(new RollingBucketParams(ChannelSelector.ARGB,

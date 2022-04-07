@@ -6,6 +6,10 @@ namespace Sobczal.Picturify.Core.Tests.Processing.Processors.Blur
 {
     public class MaxProcessorTests : AbstractProcessorTests<MaxProcessor>
     {
+        public MaxProcessorTests()
+        {
+            UseExactNumersInPixels = false;
+        }
         protected override void PopulateChannelSelectorCheckProcessors()
         {
             ChannelSelectorCheckProcessor = new MaxProcessor(new MaxParams(ChannelSelector.ARGB, new PSize(5, 5),

@@ -20,10 +20,13 @@ namespace Sobczal.Picturify.Core.Tests.Processing.Processors
         public List<T> WorkingAreaCheckProcessors { get; set; }
         public T ChannelSelectorCheckProcessor { get; set; }
 
+        public bool UseExactNumersInPixels { get; set; }
+
         public AbstractProcessorTests()
         {
             WorkingAreaCheckProcessors = new List<T>();
             SizeCheckProcessors = new List<T>();
+            UseExactNumersInPixels = true;
             PopulateSizeCheckProcessors();
             PopulateChannelSelectorCheckProcessors();
         }
@@ -122,11 +125,21 @@ namespace Sobczal.Picturify.Core.Tests.Processing.Processors
             {
                 if (i == channel)
                 {
-                    Assert.NotEqual(original[i], changed[i], new FloatArrComparer());
+                    if(UseExactNumersInPixels)
+                        Assert.NotEqual(original[i], changed[i]);
+                    else
+                    {
+                        Assert.NotEqual(original[i], changed[i], new FloatArrComparer());
+                    }
                 }
                 else
                 {
-                    Assert.Equal(original[i], changed[i], new FloatArrComparer());
+                    if(UseExactNumersInPixels)
+                        Assert.Equal(original[i], changed[i]);
+                    else
+                    {
+                        Assert.Equal(original[i], changed[i], new FloatArrComparer());
+                    }
                 }
             }
         }
@@ -155,7 +168,7 @@ namespace Sobczal.Picturify.Core.Tests.Processing.Processors
                 {
                     for (var j = 0; j < x.GetLength(1); j++)
                     {
-                        if (Math.Abs(x[i, j] - y[i, j]) > 0.05) return false;
+                        if (Math.Abs(x[i, j] - y[i, j]) > 0.03) return false;
                     }
                 }
 
