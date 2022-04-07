@@ -9,6 +9,13 @@ namespace Sobczal.Picturify.Core.Tests.Processing.Processors.Standard.Internal
         {
             UseExactNumersInPixels = false;
         }
+
+        protected override void PopulateWorkingAreaCheckProcessors()
+        {
+            WorkingAreaCheckProcessor = new RollingBucketProcessor(new RollingBucketParams(ChannelSelector.ARGB,
+                new PSize(5, 5), (ushorts, b) => 0, EdgeBehaviourSelector.Type.Constant, null));
+        }
+
         protected override void PopulateChannelSelectorCheckProcessors()
         {
             ChannelSelectorCheckProcessor = new RollingBucketProcessor(new RollingBucketParams(ChannelSelector.ARGB,

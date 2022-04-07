@@ -10,6 +10,13 @@ namespace Sobczal.Picturify.Core.Tests.Processing.Processors.Blur
         {
             UseExactNumersInPixels = false;
         }
+
+        protected override void PopulateWorkingAreaCheckProcessors()
+        {
+            WorkingAreaCheckProcessor = new MaxProcessor(new MaxParams(ChannelSelector.ARGB, new PSize(5, 5),
+                EdgeBehaviourSelector.Type.Constant, null));
+        }
+
         protected override void PopulateChannelSelectorCheckProcessors()
         {
             ChannelSelectorCheckProcessor = new MaxProcessor(new MaxParams(ChannelSelector.ARGB, new PSize(5, 5),

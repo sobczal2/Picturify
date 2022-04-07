@@ -46,6 +46,7 @@ namespace Sobczal.Picturify.Core.Processing.Standard
                      j < ProcessorParams.WorkingArea.TopExclusive;
                      j++)
                 {
+                    if(!ProcessorParams.WorkingArea.ShouldEdit(i, j)) continue;
                     for (var k = 0; k < depth; k++)
                     {
                         if (!ProcessorParams.ChannelSelector.Used(k)) continue;

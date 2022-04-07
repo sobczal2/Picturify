@@ -7,6 +7,6 @@ namespace Sobczal.Picturify.Core.Data.Operators
         // this diag -> /
         List<float[,]> GetDiag1();
         // this diag -> \
-        List<float[,]> GetXDiag2();
+        List<float[,]> GetDiag2();
     }
 }

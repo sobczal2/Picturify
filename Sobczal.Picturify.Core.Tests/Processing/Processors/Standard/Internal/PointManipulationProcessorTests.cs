@@ -6,6 +6,19 @@ namespace Sobczal.Picturify.Core.Tests.Processing.Processors.Standard.Internal
 {
     public class PointManipulationProcessorTests : AbstractProcessorTests<PointManipulationProcessor>
     {
+        protected override void PopulateWorkingAreaCheckProcessors()
+        {
+            WorkingAreaCheckProcessor = new PointManipulationProcessor(new PointManipulationParams(ChannelSelector.ARGB,
+                (f, f1, f2, f3, i, i1, selector) =>
+                {
+                    if (selector.UseAlpha) f = 0;
+                    if (selector.UseRed) f1 = 0;
+                    if (selector.UseGreen) f2 = 0;
+                    if (selector.UseBlue) f3 = 0;
+                    return (f, f1, f2, f3);
+                }, null));
+        }
+
         protected override void PopulateChannelSelectorCheckProcessors()
         {
             ChannelSelectorCheckProcessor = new PointManipulationProcessor(new PointManipulationParams(ChannelSelector.ARGB,

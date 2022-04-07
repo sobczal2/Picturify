@@ -23,7 +23,7 @@ namespace Sobczal.Picturify.Core.Processing.Standard
 
         public override IFastImage Before(IFastImage fastImage, CancellationToken cancellationToken)
         {
-            base.Before(fastImage, cancellationToken);
+            fastImage = base.Before(fastImage, cancellationToken);
             foreach (var matrix in ProcessorParams.ConvolutionMatrixes)
             {
                 var procesor = new ConvolutionProcessor(new ConvolutionParams(

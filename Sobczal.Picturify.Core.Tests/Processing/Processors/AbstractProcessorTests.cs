@@ -17,19 +17,21 @@ namespace Sobczal.Picturify.Core.Tests.Processing.Processors
     public abstract class AbstractProcessorTests<T> where T : IBaseProcessor
     {
         public List<T> SizeCheckProcessors { get; set; }
-        public List<T> WorkingAreaCheckProcessors { get; set; }
+        public T WorkingAreaCheckProcessor { get; set; }
         public T ChannelSelectorCheckProcessor { get; set; }
 
         public bool UseExactNumersInPixels { get; set; }
 
         public AbstractProcessorTests()
         {
-            WorkingAreaCheckProcessors = new List<T>();
             SizeCheckProcessors = new List<T>();
             UseExactNumersInPixels = true;
             PopulateSizeCheckProcessors();
             PopulateChannelSelectorCheckProcessors();
+            PopulateWorkingAreaCheckProcessors();
         }
+
+        protected abstract void PopulateWorkingAreaCheckProcessors();
 
         protected abstract void PopulateChannelSelectorCheckProcessors();
 
@@ -129,7 +131,7 @@ namespace Sobczal.Picturify.Core.Tests.Processing.Processors
                         Assert.NotEqual(original[i], changed[i]);
                     else
                     {
-                        Assert.NotEqual(original[i], changed[i], new FloatArrComparer());
+                        Assert.NotEqual(original[i], changed[i], new Float2DimArrComparer());
                     }
                 }
                 else
@@ -138,7 +140,104 @@ namespace Sobczal.Picturify.Core.Tests.Processing.Processors
                         Assert.Equal(original[i], changed[i]);
                     else
                     {
-                        Assert.Equal(original[i], changed[i], new FloatArrComparer());
+                        Assert.Equal(original[i], changed[i], new Float2DimArrComparer());
+                    }
+                }
+            }
+        }
+        
+        [Theory]
+        [InlineData(0)]
+        [InlineData(1)]
+        [InlineData(2)]
+        [InlineData(3)]
+        public void ExecuteProcessor_ShouldPerformOnGrayscaleImageNoMatterWhatChannelSelector(int channel)
+        {
+            var fastImage = FastImageFactory.Random(new PSize(10, 10), new Random(1)).ToGrayscale();
+            var fastImageChanged = fastImage.GetCopy();
+            
+            var paramsFieldInfo = typeof(T).GetField("ProcessorParams", BindingFlags.NonPublic | BindingFlags.Instance);
+            var procesorParams = (ProcessorParams) paramsFieldInfo.GetValue(ChannelSelectorCheckProcessor);
+            switch (channel)
+            {
+                case 0:
+                    procesorParams.ChannelSelector = ChannelSelector.A;
+                    break;
+                case 1:
+                    procesorParams.ChannelSelector = ChannelSelector.R;
+                    break;
+                case 2:
+                    procesorParams.ChannelSelector = ChannelSelector.G;
+                    break;
+                case 3:
+                    procesorParams.ChannelSelector = ChannelSelector.B;
+                    break;
+                default:
+                    throw new TestClassException("invalid channel");
+            }
+
+            fastImageChanged = fastImageChanged.ExecuteProcessor(ChannelSelectorCheckProcessor);
+            fastImageChanged = fastImageChanged.ToFloatRepresentation();
+            
+            var imageFieldInfo = typeof(FastImageF).GetField("Pixels", BindingFlags.NonPublic | BindingFlags.Instance);
+            var pixels = (float[,,]) imageFieldInfo.GetValue(fastImage);
+            var pixelsChanged = (float[,,]) imageFieldInfo.GetValue(fastImageChanged);
+            
+            var original = GetChannelFromArr(pixels, 0);
+            var changed = GetChannelFromArr(pixelsChanged, 0);
+
+            if (UseExactNumersInPixels)
+            {
+                Assert.NotEqual(original, changed);
+            }
+            else
+            {
+                Assert.NotEqual(original, changed, new Float2DimArrComparer());
+            }
+        }
+
+        [Fact]
+        public void ShouldExecuteProcessor_OnlyOnPixelsSpecifiedByAreaSelectorOnArgbImage()
+        {
+            var fastImage = FastImageFactory.Random(new PSize(5, 5), new Random(1));
+            var areaSelector = new TestAreaSelector();
+            var fastImageChanged = fastImage.GetCopy();
+            
+            var paramsFieldInfo = typeof(T).GetField("ProcessorParams", BindingFlags.NonPublic | BindingFlags.Instance);
+            var procesorParams = (ProcessorParams) paramsFieldInfo.GetValue(ChannelSelectorCheckProcessor);
+            procesorParams.WorkingArea = areaSelector;
+            
+            fastImageChanged = fastImageChanged.ExecuteProcessor(ChannelSelectorCheckProcessor);
+            fastImageChanged = fastImageChanged.ToFloatRepresentation();
+            
+            var imageFieldInfo = typeof(FastImageF).GetField("Pixels", BindingFlags.NonPublic | BindingFlags.Instance);
+            var pixels = (float[,,]) imageFieldInfo.GetValue(fastImage);
+            var pixelsChanged = (float[,,]) imageFieldInfo.GetValue(fastImageChanged);
+            for (var i = 0; i < pixels.GetLength(0); i++)
+            {
+                for (var j = 0; j < pixels.GetLength(1); j++)
+                {
+                    if (i == 0 && j == 0)
+                    {
+                        if (UseExactNumersInPixels)
+                        {
+                            Assert.NotEqual(GetPixelValue(pixels, i, j), GetPixelValue(pixelsChanged, i, j));
+                        }
+                        else
+                        {
+                            Assert.NotEqual(GetPixelValue(pixels, i, j), GetPixelValue(pixelsChanged, i, j), new Float1DimArrComparer());
+                        }
+                    }
+                    else
+                    {
+                        if (UseExactNumersInPixels)
+                        {
+                            Assert.Equal(GetPixelValue(pixels, i, j), GetPixelValue(pixelsChanged, i, j));
+                        }
+                        else
+                        {
+                            Assert.Equal(GetPixelValue(pixels, i, j), GetPixelValue(pixelsChanged, i, j), new Float1DimArrComparer());
+                        }
                     }
                 }
             }
@@ -158,7 +257,18 @@ namespace Sobczal.Picturify.Core.Tests.Processing.Processors
             return newArr;
         }
 
-        private class FloatArrComparer : IEqualityComparer<float[,]>
+        private float[] GetPixelValue(float[,,] array, int x, int y)
+        {
+            var newArr = new float[array.GetLength(2)];
+            for (var i = 0; i < array.GetLength(2); i++)
+            {
+                newArr[i] = array[x, y, i];
+            }
+
+            return newArr;
+        }
+
+        private class Float2DimArrComparer : IEqualityComparer<float[,]>
         {
             public bool Equals(float[,] x, float[,] y)
             {
@@ -178,6 +288,76 @@ namespace Sobczal.Picturify.Core.Tests.Processing.Processors
             public int GetHashCode(float[,] obj)
             {
                 return obj.GetHashCode();
+            }
+        }
+        
+        private class Float1DimArrComparer : IEqualityComparer<float[]>
+        {
+            public bool Equals(float[] x, float[] y)
+            {
+                if (x.GetLength(0) != y.GetLength(0)) return false;
+                for (var i = 0; i < x.GetLength(0); i++)
+                {
+                    if (Math.Abs(x[i] - y[i]) > 0.03) return false;
+                }
+
+                return true;
+            }
+
+            public int GetHashCode(float[] obj)
+            {
+                return obj.GetHashCode();
+            }
+        }
+
+        private class TestAreaSelector : IAreaSelector
+        {
+            public int LeftInclusive { get; set; }
+            public int RightExclusive { get; set; }
+            public int BotInclusive { get; set; }
+            public int TopExclusive { get; set; }
+
+            public TestAreaSelector()
+            {
+                LeftInclusive = 0;
+                RightExclusive = 5;
+                BotInclusive = 0;
+                TopExclusive = 5;
+            }
+            public bool ShouldEdit(int x, int y)
+            {
+                return x == LeftInclusive && y == BotInclusive;
+            }
+
+            public void Resize(int left, int right, int bot, int top)
+            {
+                if (left + LeftInclusive < 0 || right + RightExclusive < 0 || bot + BotInclusive < 0 ||
+                    top + TopExclusive < 0)
+                    throw new ArgumentException("Argumants invalid.");
+                LeftInclusive += left;
+                RightExclusive += right;
+                BotInclusive += bot;
+                TopExclusive += top;
+            }
+
+            public void Resize(int horizontal, int vertical)
+            {
+                Resize(horizontal, horizontal, vertical, vertical);
+            }
+
+            public SquareAreaSelector AsSquareAreaSelector()
+            {
+                throw new NotImplementedException();
+            }
+
+            public void Validate(PSize pSize)
+            {
+                LeftInclusive = Math.Max(0, LeftInclusive);
+                BotInclusive = Math.Max(0, BotInclusive);
+                RightExclusive = Math.Min(pSize.Width, RightExclusive);
+                TopExclusive = Math.Min(pSize.Height, TopExclusive);
+                if (LeftInclusive > RightExclusive || BotInclusive > TopExclusive)
+                    throw new ArgumentException("Invalid area selector.");
             }
         }
     }

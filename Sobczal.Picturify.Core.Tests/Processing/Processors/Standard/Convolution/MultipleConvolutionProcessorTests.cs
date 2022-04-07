@@ -6,6 +6,14 @@ namespace Sobczal.Picturify.Core.Tests.Processing.Processors.Standard.Convolutio
 {
     public class MultipleConvolutionProcessorTests : AbstractProcessorTests<MultipleConvolutionProcessor>
     {
+        protected override void PopulateWorkingAreaCheckProcessors()
+        {
+            var convolutionMatrix = new float[,] {{0.1f, 0.1f, 0.1f}, {0.1f, 0.2f, 0.1f}, {0.1f, 0.1f, 0.1f}};
+            WorkingAreaCheckProcessor = new MultipleConvolutionProcessor(new MultipleConvolutionParams(ChannelSelector.ARGB,
+                new List<float[,]>() {convolutionMatrix, convolutionMatrix}, EdgeBehaviourSelector.Type.Constant,
+                null));
+        }
+
         protected override void PopulateChannelSelectorCheckProcessors()
         {
             var convolutionMatrix = new float[,] {{0.1f, 0.1f, 0.1f}, {0.1f, 0.2f, 0.1f}, {0.1f, 0.1f, 0.1f}};

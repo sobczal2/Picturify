@@ -19,7 +19,7 @@ namespace Sobczal.Picturify.Core.Data.Operators.EdgeDetection
             return new List<float[,]> {new float[,] {{0f, 1f, 2f}, {-1f, 0f, 1f}, {-2f, -1f, 0f}}};
         }
 
-        public List<float[,]> GetXDiag2()
+        public List<float[,]> GetDiag2()
         {
             return new List<float[,]> {new float[,] {{-2f, -1f, 0f}, {-1f, 0f, 1f}, {0f, 1f, 2f}}};
         }

@@ -5,6 +5,11 @@ namespace Sobczal.Picturify.Core.Tests.Processing.Processors.Standard.Util
 {
     public class NormalisationProcessorTests : AbstractProcessorTests<NormalisationProcessor>
     {
+        protected override void PopulateWorkingAreaCheckProcessors()
+        {
+            WorkingAreaCheckProcessor = new NormalisationProcessor(new NormalisationParams(ChannelSelector.ARGB));
+        }
+
         protected override void PopulateChannelSelectorCheckProcessors()
         {
             ChannelSelectorCheckProcessor = new NormalisationProcessor(new NormalisationParams(ChannelSelector.ARGB));

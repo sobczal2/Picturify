@@ -5,10 +5,14 @@ namespace Sobczal.Picturify.Core.Tests.Processing.Processors.Standard.Util
 {
     public class MergeProcessorTests : AbstractProcessorTests<MergeProcessor>
     {
+        protected override void PopulateWorkingAreaCheckProcessors()
+        {
+            WorkingAreaCheckProcessor = new MergeProcessor(new MergeParams(ChannelSelector.A, null, null, null));
+        }
+
         protected override void PopulateChannelSelectorCheckProcessors()
         {
             ChannelSelectorCheckProcessor = new MergeProcessor(new MergeParams(ChannelSelector.A, null, null, null));
-
         }
 
         protected override void PopulateSizeCheckProcessors()

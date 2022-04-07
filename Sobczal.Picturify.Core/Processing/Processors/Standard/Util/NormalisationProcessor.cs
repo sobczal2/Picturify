@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Sobczal.Picturify.Core.Data;
+using Sobczal.Picturify.Core.Processing.Exceptions;
 using Sobczal.Picturify.Core.Utils;
 
 namespace Sobczal.Picturify.Core.Processing.Standard.Util
@@ -14,6 +15,10 @@ namespace Sobczal.Picturify.Core.Processing.Standard.Util
         {
             if (ProcessorParams.PreNormalisationFunction is null)
                 ProcessorParams.PreNormalisationFunction = x => x;
+            if (ProcessorParams.LowerBound > ProcessorParams.UpperBound)
+                throw new ParamsArgumentException(
+                    nameof(ProcessorParams.LowerBound) + " and " + nameof(ProcessorParams.UpperBound),
+                    $"{ProcessorParams.LowerBound} must be less or equal to {ProcessorParams.UpperBound}");
         }
 
         public override IFastImage Process(IFastImage fastImage, CancellationToken cancellationToken)
@@ -21,7 +26,7 @@ namespace Sobczal.Picturify.Core.Processing.Standard.Util
             ((FastImageF) fastImage).Process(ProcessingFunction, cancellationToken);
             var pmp = new PointManipulationProcessor(new PointManipulationParams(ProcessorParams.ChannelSelector,
                 PointManipulationFunction, ProcessorParams.WorkingArea));
-            multiplyByVal = 1f / (maxVal - minVal);
+            multiplyByVal = (ProcessorParams.UpperBound - ProcessorParams.LowerBound) / (maxVal - minVal);
             fastImage = fastImage.ExecuteProcessor(pmp);
             return base.Process(fastImage, cancellationToken);
         }
@@ -53,10 +58,10 @@ namespace Sobczal.Picturify.Core.Processing.Standard.Util
         private (float a, float r, float g, float b) PointManipulationFunction(float a, float r, float g, float b, int x,
             int y, ChannelSelector channelSelector)
         {
-            if (channelSelector.UseAlpha) a = (a - minVal) * multiplyByVal;
-            if (channelSelector.UseRed) r = (r - minVal) * multiplyByVal;
-            if (channelSelector.UseGreen) g = (g - minVal) * multiplyByVal;
-            if (channelSelector.UseBlue) b = (b - minVal) * multiplyByVal;
+            if (channelSelector.UseAlpha) a = ProcessorParams.LowerBound + (a - minVal) * multiplyByVal;
+            if (channelSelector.UseRed) r = ProcessorParams.LowerBound + (r - minVal) * multiplyByVal;
+            if (channelSelector.UseGreen) g = ProcessorParams.LowerBound + (g - minVal) * multiplyByVal;
+            if (channelSelector.UseBlue) b = ProcessorParams.LowerBound + (b - minVal) * multiplyByVal;
             return (a, r, g, b);
         }
     }
