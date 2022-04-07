@@ -10,6 +10,16 @@ namespace Sobczal.Picturify.Core.Processing.Standard.Util
 
         public MergeProcessor(MergeParams processorParams) : base(processorParams)
         {
+            if (ProcessorParams.MergingFunction is null)
+                ProcessorParams.MergingFunction = (in1, in2, channel) => (in1 + in2) * 0.5f;
+        }
+
+        public override IFastImage Before(IFastImage fastImage, CancellationToken cancellationToken)
+        {
+            base.Before(fastImage, cancellationToken);
+            // for testing purposes
+            if(ProcessorParams.ToMerge is null) ProcessorParams.ToMerge = FastImageFactory.Empty(fastImage.PSize);
+            return fastImage;
         }
 
         public override IFastImage Process(IFastImage fastImage, CancellationToken cancellationToken)
@@ -57,6 +67,10 @@ namespace Sobczal.Picturify.Core.Processing.Standard.Util
                     {
                         if (ProcessorParams.ChannelSelector.Used(k) && ProcessorParams.WorkingArea.ShouldEdit(i,j))
                             _tempArr[i, j, k] = ProcessorParams.MergingFunction(pixels[i, j, k], _tempArr[i, j, k], k);
+                        else
+                        {
+                            _tempArr[i, j, k] = pixels[i, j, k];
+                        }
                     }
                 }
             });

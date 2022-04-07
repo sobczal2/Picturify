@@ -18,7 +18,7 @@ namespace Sobczal.Picturify.Core.Processing.Standard
                 if (matrix.GetLength(1) > _maxKernelY) _maxKernelY = matrix.GetLength(1);
             }
             _convolutionProcessors = new List<ConvolutionProcessor>();
-            AddFilter(EdgeBehaviourSelector.GetFilter(processorParams.EdgeBehaviourType, new PSize(_maxKernelX / 2, _maxKernelY / 2)));
+            AddFilter(EdgeBehaviourSelector.GetFilter(ProcessorParams.EdgeBehaviourType, new PSize(_maxKernelX / 2, _maxKernelY / 2)));
         }
 
         public override IFastImage Before(IFastImage fastImage, CancellationToken cancellationToken)

@@ -10,12 +10,17 @@ namespace Sobczal.Picturify.Core.Processing.Standard
         private MultipleConvolutionProcessor _processorChannel2;
         public TwoChannelConvolutionProcessor(TwoChannelConvolutionParams processorParams) : base(processorParams)
         {
+        }
+
+        public override IFastImage Before(IFastImage fastImage, CancellationToken cancellationToken)
+        {
             _processorChannel1 = new MultipleConvolutionProcessor(new MultipleConvolutionParams(
-                processorParams.ChannelSelector, processorParams.ConvolutionMatrixesChannel1,
-                processorParams.EdgeBehaviourType, processorParams.WorkingArea));
+                ProcessorParams.ChannelSelector, ProcessorParams.ConvolutionMatrixesChannel1,
+                ProcessorParams.EdgeBehaviourType, ProcessorParams.WorkingArea));
             _processorChannel2 = new MultipleConvolutionProcessor(new MultipleConvolutionParams(
-                processorParams.ChannelSelector, processorParams.ConvolutionMatrixesChannel2,
-                processorParams.EdgeBehaviourType, processorParams.WorkingArea));
+                ProcessorParams.ChannelSelector, ProcessorParams.ConvolutionMatrixesChannel2,
+                ProcessorParams.EdgeBehaviourType, ProcessorParams.WorkingArea));
+            return base.Before(fastImage, cancellationToken);
         }
 
         public override IFastImage Process(IFastImage fastImage, CancellationToken cancellationToken)

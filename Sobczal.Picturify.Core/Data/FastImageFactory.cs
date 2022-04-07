@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Reflection;
 using Sobczal.Picturify.Core.Utils;
 
@@ -27,7 +28,7 @@ namespace Sobczal.Picturify.Core.Data
         /// <returns>Created <see cref="IFastImage"/>.</returns>
         public static IFastImage Empty(PSize pSize, Version version = Version.Float)
         {
-            PicturifyConfig.LogInfo($"FastImage{MethodBase.GetCurrentMethod().Name}");
+            PicturifyConfig.LogInfo($"FastImage.{MethodBase.GetCurrentMethod().Name}");
             switch (version)
             {
                 case Version.Byte:
@@ -46,7 +47,7 @@ namespace Sobczal.Picturify.Core.Data
         /// <returns>Created <see cref="IFastImage"/>.</returns>
         public static IFastImage FromImage(Image image, Version version = Version.Float)
         {
-            PicturifyConfig.LogInfo($"FastImage{MethodBase.GetCurrentMethod().Name}");
+            PicturifyConfig.LogInfo($"FastImage.{MethodBase.GetCurrentMethod().Name}");
             switch (version)
             {
                 case Version.Byte:
@@ -65,7 +66,7 @@ namespace Sobczal.Picturify.Core.Data
         /// <returns>Created <see cref="IFastImage"/>.</returns>
         public static IFastImage FromFile(string path, Version version = Version.Float)
         {
-            PicturifyConfig.LogInfo($"FastImage{MethodBase.GetCurrentMethod().Name}");
+            PicturifyConfig.LogInfo($"FastImage.{MethodBase.GetCurrentMethod().Name}");
             switch (version)
             {
                 case Version.Byte:
@@ -73,6 +74,31 @@ namespace Sobczal.Picturify.Core.Data
                 default:
                     return new FastImageF(path);
             }
+        }
+
+        /// <summary>
+        /// For testing purposes
+        /// </summary>
+        /// <param name="size"></param>
+        /// <returns></returns>
+        public static IFastImage Random(PSize size, Random rand)
+        {
+            PicturifyConfig.LogInfo($"FastImage.{MethodBase.GetCurrentMethod().Name}");
+            IFastImage fastImage = new FastImageF(size);
+            var fieldInfo = typeof(FastImageF).GetField("Pixels", BindingFlags.NonPublic | BindingFlags.Instance);
+            var actualArray = (float[,,]) fieldInfo.GetValue(fastImage);
+            for (var i = 0; i < actualArray.GetLength(0); i++)
+            {
+                for (var j = 0; j < actualArray.GetLength(1); j++)
+                {
+                    for (var k = 0; k < actualArray.GetLength(2); k++)
+                    {
+                        actualArray[i, j, k] = (float) rand.NextDouble();
+                    }
+                }
+            }
+
+            return fastImage;
         }
     }
 }

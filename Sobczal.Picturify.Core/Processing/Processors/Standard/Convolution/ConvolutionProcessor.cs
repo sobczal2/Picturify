@@ -39,6 +39,7 @@ namespace Sobczal.Picturify.Core.Processing.Standard
             var rangeX = convolutionMatrix.GetLength(0) / 2;
             var rangeY = convolutionMatrix.GetLength(1) / 2;
             var arr = new float[pixels.GetLength(0), pixels.GetLength(1), pixels.GetLength(2)];
+            Array.Copy(pixels, arr, pixels.Length);
             Parallel.For(ProcessorParams.WorkingArea.LeftInclusive, ProcessorParams.WorkingArea.RightExclusive, po, i =>
             {
                 for (var j = ProcessorParams.WorkingArea.BotInclusive;
