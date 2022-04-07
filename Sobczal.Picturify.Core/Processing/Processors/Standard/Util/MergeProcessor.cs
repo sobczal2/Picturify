@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Sobczal.Picturify.Core.Data;
 
@@ -36,6 +37,7 @@ namespace Sobczal.Picturify.Core.Processing.Standard.Util
             po.CancellationToken = cancellationToken;
             var depth = pixels.GetLength(2);
             _tempArr = new float[pixels.GetLength(0), pixels.GetLength(1), pixels.GetLength(2)];
+            Array.Copy(pixels, _tempArr, pixels.Length);
             Parallel.For(ProcessorParams.WorkingArea.LeftInclusive, ProcessorParams.WorkingArea.RightExclusive, po, i =>
             {
                 for (var j = ProcessorParams.WorkingArea.BotInclusive;
@@ -67,10 +69,6 @@ namespace Sobczal.Picturify.Core.Processing.Standard.Util
                     {
                         if (ProcessorParams.ChannelSelector.Used(k) && ProcessorParams.WorkingArea.ShouldEdit(i,j))
                             _tempArr[i, j, k] = ProcessorParams.MergingFunction(pixels[i, j, k], _tempArr[i, j, k], k);
-                        else
-                        {
-                            _tempArr[i, j, k] = pixels[i, j, k];
-                        }
                     }
                 }
             });

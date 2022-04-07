@@ -17,32 +17,34 @@ namespace Console
 {
     public class Program
     {
-        public static async Task Main(string[] args)
+        public static void Main(string[] args)
         {
-            var fastImage = FastImageFactory.FromFile(@"D:\dev\dotnet\libraries\images\PicturifyExamples\sea.jpg");
-            // var beforeB = new BeforeProcessorB(new EmptyProcessorParams()).AddFilter(
-            //     EdgeBehaviourSelector.GetFilter(EdgeBehaviourSelector.Type.Crop, new PSize(500, 500)));
-            // var beforeF = new BeforeProcessorF(new EmptyProcessorParams()).AddFilter(
-            //     EdgeBehaviourSelector.GetFilter(EdgeBehaviourSelector.Type.Crop, new PSize(500, 500)));
-            // fastImage.GetCopy().ExecuteProcessor(beforeB).Save(@"C:\dev\dotnet\libs\DataAndAlgorithms\Image\PicturifyExamples\outputB.jpg");
-            // fastImage.GetCopy().ExecuteProcessor(beforeF).Save(@"C:\dev\dotnet\libs\DataAndAlgorithms\Image\PicturifyExamples\outputF.jpg");
+            var fastImage =
+                FastImageFactory.FromFile(@"D:\dev\dotnet\libraries\images\PicturifyExamples\mountain.jpg");
+            fastImage.Save(@"D:\dev\dotnet\libraries\images\PicturifyExamples\output.jpg");
             var sw = new Stopwatch();
             sw.Start();
             fastImage.GetCopy().ExecuteProcessor(new DualOperatorProcessor(new DualOperatorParams(ChannelSelector.RGB,
-                new SobelOperator3(), OperatorBeforeNormalizationFunc.Linear)))
-                .Save(@"D:\dev\dotnet\libraries\images\PicturifyExamples\linear.jpg");
+                new SobelOperator5(), OperatorBeforeNormalizationFunc.Linear, workingArea: new SquareAreaSelector(100, 200, 100, 200))))
+                .Save(@"D:\dev\dotnet\libraries\images\PicturifyExamples\Sobel\linear.jpg");
             fastImage.GetCopy().ExecuteProcessor(new DualOperatorProcessor(new DualOperatorParams(ChannelSelector.RGB,
-                    new SobelOperator3(), OperatorBeforeNormalizationFunc.Root2)))
-                .Save(@"D:\dev\dotnet\libraries\images\PicturifyExamples\rt2.jpg");
+                    new SobelOperator5(), OperatorBeforeNormalizationFunc.Root2)))
+                .Save(@"D:\dev\dotnet\libraries\images\PicturifyExamples\Sobel\rt2.jpg");
             fastImage.GetCopy().ExecuteProcessor(new DualOperatorProcessor(new DualOperatorParams(ChannelSelector.RGB,
-                    new SobelOperator3(), OperatorBeforeNormalizationFunc.Root3)))
-                .Save(@"D:\dev\dotnet\libraries\images\PicturifyExamples\rt3.jpg");
+                    new SobelOperator5(), OperatorBeforeNormalizationFunc.Root3)))
+                .Save(@"D:\dev\dotnet\libraries\images\PicturifyExamples\Sobel\rt3.jpg");
             fastImage.GetCopy().ExecuteProcessor(new DualOperatorProcessor(new DualOperatorParams(ChannelSelector.RGB,
-                    new SobelOperator3(), OperatorBeforeNormalizationFunc.Root4)))
-                .Save(@"D:\dev\dotnet\libraries\images\PicturifyExamples\rt4.jpg");
+                    new SobelOperator5(), OperatorBeforeNormalizationFunc.Root4)))
+                .Save(@"D:\dev\dotnet\libraries\images\PicturifyExamples\Sobel\rt4.jpg");
             fastImage.GetCopy().ExecuteProcessor(new DualOperatorProcessor(new DualOperatorParams(ChannelSelector.RGB,
-                    new SobelOperator3(), OperatorBeforeNormalizationFunc.Root5)))
-                .Save(@"D:\dev\dotnet\libraries\images\PicturifyExamples\rt5.jpg");
+                    new SobelOperator5(), OperatorBeforeNormalizationFunc.Root5)))
+                .Save(@"D:\dev\dotnet\libraries\images\PicturifyExamples\Sobel\rt5.jpg");
+            fastImage.GetCopy().ExecuteProcessor(new DualOperatorProcessor(new DualOperatorParams(ChannelSelector.RGB,
+                    new SobelOperator5(), OperatorBeforeNormalizationFunc.Log2)))
+                .Save(@"D:\dev\dotnet\libraries\images\PicturifyExamples\Sobel\log2.jpg");
+            fastImage.GetCopy().ExecuteProcessor(new DualOperatorProcessor(new DualOperatorParams(ChannelSelector.RGB,
+                    new SobelOperator5(), OperatorBeforeNormalizationFunc.Log10)))
+                .Save(@"D:\dev\dotnet\libraries\images\PicturifyExamples\Sobel\log10.jpg");
             sw.Stop();
             System.Console.WriteLine($"Ellapsed: {sw.ElapsedMilliseconds} ms.");
 
