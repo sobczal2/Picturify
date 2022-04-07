@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using Sobczal.Picturify.Core;
 using Sobczal.Picturify.Core.Data;
 using Sobczal.Picturify.Core.Data.Operators.EdgeDetection;
 using Sobczal.Picturify.Core.Processing.Blur;

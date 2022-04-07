@@ -198,6 +198,7 @@ namespace Sobczal.Picturify.Core.Data
 
         public override FastImageB ToByteRepresentation()
         {
+            PicturifyConfig.LogDebug($"{GetType().Name}.{MethodBase.GetCurrentMethod().Name} started.");
             var sw = new Stopwatch();
             sw.Start();
             var arr = new byte[Pixels.GetLength(0), Pixels.GetLength(1), Pixels.GetLength(2)];
@@ -218,6 +219,7 @@ namespace Sobczal.Picturify.Core.Data
 
         public override FastImageF ToFloatRepresentation()
         {
+            PicturifyConfig.LogDebug($"{GetType().Name}.{MethodBase.GetCurrentMethod().Name} started.");
             PicturifyConfig.LogTimeDebug($"{GetType().Name}.{MethodBase.GetCurrentMethod().Name}", 0);
             return this;
         }

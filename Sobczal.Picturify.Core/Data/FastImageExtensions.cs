@@ -31,6 +31,8 @@ namespace Sobczal.Picturify.Core.Data
         /// <returns><see cref="Task{T}"/> with edited <see cref="IFastImage"/></returns>
         public static async Task<IFastImage> ExecuteProcessorAsync(this IFastImage fastImage, IBaseProcessor processor, CancellationToken cancellationToken)
         {
+            PicturifyConfig.LogInfo($"{processor.GetType().Name} started.");
+            PicturifyConfig.Indent++;
             var sw = new Stopwatch();
             sw.Start();
             await Task.Factory.StartNew(() =>
@@ -40,6 +42,7 @@ namespace Sobczal.Picturify.Core.Data
                 fastImage = processor.After(fastImage, cancellationToken);
             });
             sw.Stop();
+            PicturifyConfig.Indent--;
             PicturifyConfig.LogTime(processor.GetType().Name, sw.ElapsedMilliseconds);
             return fastImage;
         }
