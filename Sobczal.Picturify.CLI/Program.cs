@@ -9,6 +9,7 @@ namespace Sobczal.Picturify.CLI
     {
         public static void Main(string[] args)
         {
+            Console.WriteLine("Henlo2");
             // var availableCommands = new List<Command>();
             // var coreCommand = new Command("Core");
             // availableCommands.Add();

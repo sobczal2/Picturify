@@ -7,7 +7,6 @@
         Root3,
         Root4,
         Root5,
-        Log2,
-        Log10
+        Log
     }
 }

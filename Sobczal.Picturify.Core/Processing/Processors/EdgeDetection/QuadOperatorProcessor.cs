@@ -60,13 +60,9 @@ namespace Sobczal.Picturify.Core.Processing.EdgeDetection
                     mergingFunc = (in1, in2, channel) =>
                         (float) Math.Pow(in1 + in2, 0.2);
                     break;
-                case OperatorBeforeNormalizationFunc.Log2:
+                case OperatorBeforeNormalizationFunc.Log:
                     mergingFunc = (in1, in2, channel) =>
                         (float) Math.Log(in1 * in1 + in2 * in2 + 1, 2);
-                    break;
-                case OperatorBeforeNormalizationFunc.Log10:
-                    mergingFunc = (in1, in2, channel) =>
-                        (float) Math.Log10(in1 * in1 + in2 * in2 + 1);
                     break;
                 default:
                     mergingFunc = (in1, in2, channel) =>
