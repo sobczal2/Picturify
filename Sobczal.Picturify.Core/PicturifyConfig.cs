@@ -115,7 +115,7 @@ namespace Sobczal.Picturify.Core
             var sb = new StringBuilder();
             for (var i = 0; i < Indent; i++)
             {
-                sb.Append("|\t");
+                sb.Append("\u007c\t");
             }
 
             return sb.ToString();
