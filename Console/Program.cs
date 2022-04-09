@@ -66,7 +66,7 @@ namespace Console
                 // sw.Stop();
                 // System.Console.WriteLine($"Ellapsed: {sw.ElapsedMilliseconds}" );
 
-                MovieIO.MovieToMovie(@"D:\dev\dotnet\libraries\images\PicturifyExamples\videos\2055.mp4",
+                MovieIO.MovieToMovie(@"D:\dev\dotnet\libraries\images\PicturifyExamples\createdVideos\zenitsu_sound.mp4",
                     String.Empty, null);
         }
     }
