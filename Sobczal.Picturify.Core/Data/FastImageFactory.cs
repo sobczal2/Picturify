@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.IO;
 using System.Reflection;
 using Sobczal.Picturify.Core.Utils;
 
@@ -99,6 +100,18 @@ namespace Sobczal.Picturify.Core.Data
             }
 
             return fastImage;
+        }
+        
+        public static IFastImage FromStream(Stream stream, Version version = Version.Float)
+        {
+            PicturifyConfig.LogInfo($"FastImage.{MethodBase.GetCurrentMethod().Name}");
+            switch (version)
+            {
+                case Version.Byte:
+                    return new FastImageB(stream);
+                default:
+                    return new FastImageF(stream);
+            }
         }
     }
 }

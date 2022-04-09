@@ -10,6 +10,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Sobczal.Picturify.Core\Sobczal.Picturify.Core.csproj" />
+      <ProjectReference Include="..\Sobczal.Picturify.Movie\Sobczal.Picturify.Movie.csproj" />
     </ItemGroup>
 
 </Project>

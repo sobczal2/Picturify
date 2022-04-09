@@ -15,9 +15,9 @@ namespace Sobczal.Picturify.Core.Processing
     /// Base for all processors in Picturify. Feel free to derive from this class and write a processor yourself!
     /// Processors may be reused, but don't run <see cref="Process"/> on the same object in parallel.
     /// </summary>
-    /// <typeparam name="T">Type derived from ProcessorParams. Specifies data type passed to processor on init.</typeparam>
-    /// <typeparam name="V"><see cref="FastImageB"/> or <see cref="FastImageF"/> depending on what type of <see cref="FastImage{T}"/> you want to use.</typeparam>
-    public abstract class BaseProcessor<T, V> : IBaseProcessor where T : ProcessorParams where V : IFastImage
+    /// <typeparam name="P">Type derived from ProcessorParams. Specifies data type passed to processor on init.</typeparam>
+    /// <typeparam name="T"><see cref="FastImageB"/> or <see cref="FastImageF"/> depending on what type of <see cref="FastImage{T}"/> you want to use.</typeparam>
+    public abstract class BaseProcessor<P, T> : IBaseProcessor where P : ProcessorParams where T : IFastImage
     {
         /// <summary>
         /// List of filters to be used on <see cref="Before"/> and <see cref="After"/>.
@@ -28,15 +28,17 @@ namespace Sobczal.Picturify.Core.Processing
         /// <summary>
         /// Stores data passed to processor on init.
         /// </summary>
-        protected T ProcessorParams;
+        protected P ProcessorParams;
 
         /// <summary>
         /// Basic constructor, does minor check for <see cref="ProcessorParams"/> and initializes processor.
         /// </summary>
         /// <param name="processorParams">Params of processing.</param>
         /// <exception cref="ArgumentException"></exception>
-        public BaseProcessor(T processorParams)
+        public BaseProcessor(P processorParams)
         {
+            if(processorParams is null) 
+                throw new ParamsArgumentException(nameof(processorParams), "can't be null");
             if (processorParams.ChannelSelector is null)
                 throw new ParamsArgumentException(nameof(processorParams.ChannelSelector), "can't be null");
             _filters = new List<BaseFilter>();
@@ -46,17 +48,17 @@ namespace Sobczal.Picturify.Core.Processing
         /// <summary>
         /// This method gets called first(before <see cref="Process"/>) in <see cref="FastImageExtensions.ExecuteProcessor"/>
         /// and <see cref="FastImageExtensions.ExecuteProcessorAsync"/>. Conversion of <see cref="IFastImage"/> to
-        /// correct version (<see cref="FastImageB"/> or <see cref="FastImageF"/>) specified by <see cref="V"/>, executing
+        /// correct version (<see cref="FastImageB"/> or <see cref="FastImageF"/>) specified by <see cref="T"/>, executing
         /// all of <see cref="BaseFilter.Before"/> added (in order of addition) is done here.
         /// Call it only from overrides of this method, preferably at the beginning.
         /// </summary>
         /// <param name="fastImage"><see cref="FastImage{T}"/> to work on.</param>
         /// <param name="cancellationToken"><see cref="CancellationToken"/> passed down to filters.</param>
         /// <returns><see cref="FastImage{T}"/> after operations listed above.</returns>
-        /// <exception cref="NotSupportedException">Thrown when <see cref="V"/> is not <see cref="FastImageF"/> or <see cref="FastImageB"/></exception>
+        /// <exception cref="NotSupportedException">Thrown when <see cref="T"/> is not <see cref="FastImageF"/> or <see cref="FastImageB"/></exception>
         public virtual IFastImage Before(IFastImage fastImage, CancellationToken cancellationToken)
         {
-            var imageType = typeof(V);
+            var imageType = typeof(T);
             if (imageType == typeof(FastImageB))
                 fastImage = fastImage.ToByteRepresentation();
             else if (imageType == typeof(FastImageF))
