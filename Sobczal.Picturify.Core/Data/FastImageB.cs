@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -43,6 +44,10 @@ namespace Sobczal.Picturify.Core.Data
         {
             var bitmap = new Bitmap(image);
             SetPixelsFromBitmap(bitmap, CancellationToken.None);
+        }
+
+        internal FastImageB(Stream stream) : this(Image.FromStream(stream))
+        {
         }
         
         /// <summary>

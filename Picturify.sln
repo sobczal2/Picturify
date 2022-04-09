@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sobczal.Picturify.Core.Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sobczal.Picturify.CLI", "Sobczal.Picturify.CLI\Sobczal.Picturify.CLI.csproj", "{70BB316D-302F-4B84-B1F6-39F3C63D6DBA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sobczal.Picturify.Movie", "Sobczal.Picturify.Movie\Sobczal.Picturify.Movie.csproj", "{6A1C3157-A0C0-4BFB-9875-3955CC4FBAEB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{70BB316D-302F-4B84-B1F6-39F3C63D6DBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{70BB316D-302F-4B84-B1F6-39F3C63D6DBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{70BB316D-302F-4B84-B1F6-39F3C63D6DBA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A1C3157-A0C0-4BFB-9875-3955CC4FBAEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A1C3157-A0C0-4BFB-9875-3955CC4FBAEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A1C3157-A0C0-4BFB-9875-3955CC4FBAEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A1C3157-A0C0-4BFB-9875-3955CC4FBAEB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

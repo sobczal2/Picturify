@@ -4,13 +4,11 @@
         <ImplicitUsings>disable</ImplicitUsings>
         <Nullable>disable</Nullable>
         <TargetFrameworks>net48;net6.0;netstandard2.1</TargetFrameworks>
-        <OutputType>Exe</OutputType>
         <LangVersion>7.3</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Sobczal.Picturify.Core\Sobczal.Picturify.Core.csproj" />
-      <ProjectReference Include="..\Sobczal.Picturify.Movie\Sobczal.Picturify.Movie.csproj" />
     </ItemGroup>
 
 </Project>
