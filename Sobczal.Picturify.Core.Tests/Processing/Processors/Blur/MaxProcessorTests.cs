@@ -4,7 +4,7 @@ using Sobczal.Picturify.Core.Utils;
 
 namespace Sobczal.Picturify.Core.Tests.Processing.Processors.Blur
 {
-    public class MaxProcessorTests : AbstractProcessorTests<MaxProcessor>
+    public class MaxProcessorTests : AbstractProcessorTests<MaxBlurProcessor>
     {
         public MaxProcessorTests()
         {
@@ -13,23 +13,23 @@ namespace Sobczal.Picturify.Core.Tests.Processing.Processors.Blur
 
         protected override void PopulateWorkingAreaCheckProcessors()
         {
-            WorkingAreaCheckProcessor = new MaxProcessor(new MaxParams(ChannelSelector.ARGB, new PSize(5, 5),
+            WorkingAreaCheckProcessor = new MaxBlurProcessor(new MaxBlurParams(ChannelSelector.ARGB, new PSize(5, 5),
                 EdgeBehaviourSelector.Type.Constant, null));
         }
 
         protected override void PopulateChannelSelectorCheckProcessors()
         {
-            ChannelSelectorCheckProcessor = new MaxProcessor(new MaxParams(ChannelSelector.ARGB, new PSize(5, 5),
+            ChannelSelectorCheckProcessor = new MaxBlurProcessor(new MaxBlurParams(ChannelSelector.ARGB, new PSize(5, 5),
                 EdgeBehaviourSelector.Type.Constant, null));
         }
 
         protected override void PopulateSizeCheckProcessors()
         {
-            SizeCheckProcessors.Add(new MaxProcessor(new MaxParams(ChannelSelector.A, new PSize(5, 5),
+            SizeCheckProcessors.Add(new MaxBlurProcessor(new MaxBlurParams(ChannelSelector.A, new PSize(5, 5),
                 EdgeBehaviourSelector.Type.Constant, null)));
-            SizeCheckProcessors.Add(new MaxProcessor(new MaxParams(ChannelSelector.RGB, new PSize(1, 5),
+            SizeCheckProcessors.Add(new MaxBlurProcessor(new MaxBlurParams(ChannelSelector.RGB, new PSize(1, 5),
                 EdgeBehaviourSelector.Type.Constant, new SquareAreaSelector(2, 8, 2, 8))));
-            SizeCheckProcessors.Add(new MaxProcessor(new MaxParams(ChannelSelector.ARGB, new PSize(5, 1),
+            SizeCheckProcessors.Add(new MaxBlurProcessor(new MaxBlurParams(ChannelSelector.ARGB, new PSize(5, 1),
                 EdgeBehaviourSelector.Type.Constant, new SquareAreaSelector(3, 7, 3, 7))));
         }
     }

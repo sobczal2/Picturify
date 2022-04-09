@@ -3,8 +3,10 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
+using Sobczal.Picturify.Core;
 using Sobczal.Picturify.Core.Data;
 using Sobczal.Picturify.Core.Processing.Exceptions;
 using Sobczal.Picturify.Core.Utils;
@@ -28,6 +30,10 @@ namespace Sobczal.Picturify.Movie
         /// <exception cref="ParamsArgumentException"></exception>
         public static void MovieToMovie(string inputFile, string outputFile, IMovieTransform movieTransform, PSize size, float outputFramerate, bool useSound = true, int crfQuality = 15)
         {
+            PicturifyConfig.LogInfo($"Started conversion of file {inputFile} in MovieIO.{MethodBase.GetCurrentMethod().Name}");
+            PicturifyConfig.SetLoggingLevel(PicturifyConfig.LoggingLevel.Error);
+            var sw = new Stopwatch();
+            sw.Start();
             if (size.Width <= 0 || size.Height <= 0)
                 throw new ArgumentException("can't be negative or zero", nameof(size));
             if(crfQuality < 2 || crfQuality > 31)
@@ -43,7 +49,7 @@ namespace Sobczal.Picturify.Movie
             };
             
             var writeProcess = new Process();
-            var soundArg = useSound ? $"-i {inputFile}" : String.Empty;
+            var soundArg = useSound ? $"-i {inputFile}" : string.Empty;
             var soundArg2 = useSound ? "-map 1:a" : string.Empty;
             writeProcess.StartInfo = new ProcessStartInfo
             {
@@ -60,6 +66,7 @@ namespace Sobczal.Picturify.Movie
             {
                 using (var stream = new MemoryStream())
                 {
+                    var frameNo = 0;
                     while (!readProcess.HasExited)
                     {
                         var startingBytes = new byte[6];
@@ -87,7 +94,9 @@ namespace Sobczal.Picturify.Movie
                         }
 
                         var fastImage = FastImageFactory.FromStream(stream);
-
+                        PicturifyConfig.SetLoggingLevel(PicturifyConfig.LoggingLevel.Information);
+                        PicturifyConfig.LogInfo($"Processing frame {frameNo++}");
+                        PicturifyConfig.SetLoggingLevel(PicturifyConfig.LoggingLevel.Error);
                         fastImage = movieTransform.GetNext(fastImage);
 
                         if (fastImage.PSize.Width != size.Width || fastImage.PSize.Height != size.Height)
@@ -106,6 +115,9 @@ namespace Sobczal.Picturify.Movie
                 readProcess.Close();
                 writeProcess.Close();
             }
+            sw.Stop();
+            PicturifyConfig.SetLoggingLevel(PicturifyConfig.LoggingLevel.Information);
+            PicturifyConfig.LogTime($"MovieIO.{MethodBase.GetCurrentMethod().Name}", sw.ElapsedMilliseconds);
         }
     }
 }

@@ -4,9 +4,9 @@ using Sobczal.Picturify.Core.Utils;
 namespace Sobczal.Picturify.Core.Processing.Blur
 {
     /// <summary>
-    /// Params class for <see cref="MedianProcessor"/>.
+    /// Params class for <see cref="MedianBlurProcessor"/>.
     /// </summary>
-    public class MedianParams : ProcessorParams
+    public class MedianBlurParams : ProcessorParams
     {
         /// <summary>
         /// Range of analyzed pixels. Kernel size is set as [2 * <see cref="Range"/> + 1, 2 * <see cref="Range"/> + 1]
@@ -30,7 +30,7 @@ namespace Sobczal.Picturify.Core.Processing.Blur
         /// <param name="edgeBehaviourType">Defines behaviour on edges (necessary when internal kernel is bigger than 1x1). See <see cref="EdgeBehaviourType"/>.</param>
         /// <param name="workingArea">Defines starting working area(this may be changed internally by filters or processor itself).</param>
         /// <exception cref="ParamsArgumentException">Thrown when range is &lt; 0 on any dimension.</exception>
-        public MedianParams(ChannelSelector channelSelector, PSize range, EdgeBehaviourSelector.Type edgeBehaviourType = EdgeBehaviourSelector.Type.Extend, IAreaSelector workingArea = null) : base(workingArea, channelSelector)
+        public MedianBlurParams(ChannelSelector channelSelector, PSize range, EdgeBehaviourSelector.Type edgeBehaviourType = EdgeBehaviourSelector.Type.Extend, IAreaSelector workingArea = null) : base(workingArea, channelSelector)
         {
             if (range.Width <= 0 || range.Height <= 0)
                 throw new ParamsArgumentException(nameof(range), "can't be negative or 0");
