@@ -23,17 +23,20 @@ namespace Console
     {
         public static void Main(string[] args)
         {
-            // var fastImage =
-                // FastImageFactory.FromFile(@"D:\dev\dotnet\libraries\images\PicturifyExamples\phineas.jpg");
+            var fastImage =
+                FastImageFactory.FromFile(@"D:\dev\dotnet\libraries\images\PicturifyExamples\brickleberry.jpg").ToGrayscale();
                 // fastImage.Save(@"D:\dev\dotnet\libraries\images\PicturifyExamples\output.jpg");
                 // var sw = new Stopwatch();
                 // sw.Start();
                 // fastImage.GetCopy().ExecuteProcessor(new DualOperatorProcessor(new DualOperatorParams(ChannelSelector.RGB,
                 //     new SobelOperator5(), OperatorBeforeNormalizationFunc.Linear)))
                 //     .Save(@"D:\dev\dotnet\libraries\images\PicturifyExamples\Sobel\linear.jpg");
-                // fastImage.GetCopy().ExecuteProcessor(new DualOperatorProcessor(new DualOperatorParams(ChannelSelector.RGB,
-                //         new SobelOperator5(), OperatorBeforeNormalizationFunc.Root2)))
-                //     .Save(@"D:\dev\dotnet\libraries\images\PicturifyExamples\Sobel\rt2.jpg");
+                fastImage.GetCopy().ExecuteProcessor(new DualOperatorProcessor(new DualOperatorParams(ChannelSelector.RGB,
+                        new SobelOperator5(), OperatorBeforeNormalizationFunc.Root2, useNonMaximumSuppression: true)))
+                    .Save(@"D:\dev\dotnet\libraries\images\PicturifyExamples\Sobel\rt2_supr.png");
+                fastImage.GetCopy().ExecuteProcessor(new DualOperatorProcessor(new DualOperatorParams(ChannelSelector.RGB,
+                        new SobelOperator5(), OperatorBeforeNormalizationFunc.Root2, useNonMaximumSuppression: false)))
+                    .Save(@"D:\dev\dotnet\libraries\images\PicturifyExamples\Sobel\rt2_nosupr.png");
                 // fastImage.GetCopy().ExecuteProcessor(new DualOperatorProcessor(new DualOperatorParams(ChannelSelector.RGB,
                 //         new SobelOperator5(), OperatorBeforeNormalizationFunc.Root3)))
                 //     .Save(@"D:\dev\dotnet\libraries\images\PicturifyExamples\Sobel\rt3.jpg");
@@ -43,9 +46,12 @@ namespace Console
                 // fastImage.GetCopy().ExecuteProcessor(new DualOperatorProcessor(new DualOperatorParams(ChannelSelector.RGB,
                 //         new SobelOperator5(), OperatorBeforeNormalizationFunc.Root5)))
                 //     .Save(@"D:\dev\dotnet\libraries\images\PicturifyExamples\Sobel\rt5.jpg");
-                // fastImage.GetCopy().ExecuteProcessor(new DualOperatorProcessor(new DualOperatorParams(ChannelSelector.RGB,
-                //         new SobelOperator5(), OperatorBeforeNormalizationFunc.Log)))
-                //     .Save(@"D:\dev\dotnet\libraries\images\PicturifyExamples\Sobel\log_divided.jpg");
+                fastImage.GetCopy().ExecuteProcessor(new DualOperatorProcessor(new DualOperatorParams(ChannelSelector.RGB,
+                        new SobelOperator5(), OperatorBeforeNormalizationFunc.Log, useNonMaximumSuppression: true)))
+                    .Save(@"D:\dev\dotnet\libraries\images\PicturifyExamples\Sobel\log_supr.png");
+                fastImage.GetCopy().ExecuteProcessor(new DualOperatorProcessor(new DualOperatorParams(ChannelSelector.RGB,
+                        new SobelOperator5(), OperatorBeforeNormalizationFunc.Log, useNonMaximumSuppression: false)))
+                    .Save(@"D:\dev\dotnet\libraries\images\PicturifyExamples\Sobel\log_nosupr.png");
                 // sw.Stop();
                 // System.Console.WriteLine($"Ellapsed: {sw.ElapsedMilliseconds} ms.");
 
@@ -67,10 +73,10 @@ namespace Console
                 // System.Console.WriteLine($"Ellapsed: {sw.ElapsedMilliseconds}" );
 
                 // PicturifyConfig.SetLoggingLevel(PicturifyConfig.LoggingLevel.Fatal);
-                MovieIO.MovieToMovie(@"D:\dev\dotnet\libraries\images\PicturifyExamples\createdVideos\2055_short.mp4",
-                    @"D:\dev\dotnet\libraries\images\PicturifyExamples\createdVideos\output.mp4",
-                    new SingleProcessorTransform<MedianProcessor>(new MedianProcessor(
-                        new MedianParams(ChannelSelector.RGB, new PSize(10, 10), EdgeBehaviourSelector.Type.Mirror))), new PSize(1280, 720), 24, useSound: true, crfQuality: 2);
+                // MovieIO.MovieToMovie(@"D:\dev\dotnet\libraries\images\PicturifyExamples\videos\wasabi.mp4",
+                //     @"D:\dev\dotnet\libraries\images\PicturifyExamples\createdVideos\wasabi_sobel.mp4",
+                //     new SingleProcessorTransform<DualOperatorProcessor>(new DualOperatorProcessor(
+                //         new DualOperatorParams(ChannelSelector.RGB, new SobelOperator5(), OperatorBeforeNormalizationFunc.Log))), new PSize(1920, 1080), 25, useSound: true, crfQuality: 2);
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Sobczal.Picturify.Core.Data;
+using Sobczal.Picturify.Core.Processing.Exceptions;
 
 namespace Sobczal.Picturify.Core.Processing.Standard.Util
 {
@@ -20,6 +21,10 @@ namespace Sobczal.Picturify.Core.Processing.Standard.Util
             base.Before(fastImage, cancellationToken);
             // for testing purposes
             if(ProcessorParams.ToMerge is null) ProcessorParams.ToMerge = FastImageFactory.Empty(fastImage.PSize);
+            if (fastImage.PSize.Width != ProcessorParams.ToMerge.PSize.Width ||
+                fastImage.PSize.Height != ProcessorParams.ToMerge.PSize.Height)
+                throw new ParamsArgumentException("different size images not supported.",
+                    nameof(ProcessorParams.ToMerge));
             return fastImage;
         }
 

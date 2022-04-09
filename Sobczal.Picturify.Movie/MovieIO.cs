@@ -23,7 +23,7 @@ namespace Sobczal.Picturify.Movie
         /// <param name="size"></param>
         /// <param name="outputFramerate"></param>
         /// <param name="useSound"></param>
-        /// <param name="crfQuality">Quality setting - 2 best quality, 31 - worst quality</param>
+        /// <param name="crfQuality">Quality setting - 2 best quality, 31 - worst quality, 15-18 recommended</param>
         /// <exception cref="Exception"></exception>
         /// <exception cref="ParamsArgumentException"></exception>
         public static void MovieToMovie(string inputFile, string outputFile, IMovieTransform movieTransform, PSize size, float outputFramerate, bool useSound = true, int crfQuality = 15)

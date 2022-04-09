@@ -14,7 +14,7 @@ namespace Sobczal.Picturify.Core.Processing.Filters.EdgeBehaviour
         }
         public override IFastImage Before(IFastImage fastImage, ProcessorParams processorParams, CancellationToken cancellationToken)
         {
-            processorParams.WorkingArea.Resize(-_range.Width, -_range.Height);
+            processorParams.WorkingArea?.Resize(-_range.Width, -_range.Height);
             return base.Before(fastImage, processorParams, cancellationToken);
         }
 
