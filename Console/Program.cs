@@ -66,8 +66,11 @@ namespace Console
                 // sw.Stop();
                 // System.Console.WriteLine($"Ellapsed: {sw.ElapsedMilliseconds}" );
 
-                MovieIO.MovieToMovie(@"D:\dev\dotnet\libraries\images\PicturifyExamples\createdVideos\zenitsu_sound.mp4",
-                    String.Empty, null);
+                // PicturifyConfig.SetLoggingLevel(PicturifyConfig.LoggingLevel.Fatal);
+                MovieIO.MovieToMovie(@"D:\dev\dotnet\libraries\images\PicturifyExamples\createdVideos\2055_short.mp4",
+                    @"D:\dev\dotnet\libraries\images\PicturifyExamples\createdVideos\output.mp4",
+                    new SingleProcessorTransform<MedianProcessor>(new MedianProcessor(
+                        new MedianParams(ChannelSelector.RGB, new PSize(10, 10), EdgeBehaviourSelector.Type.Mirror))), new PSize(1280, 720), 24, useSound: true, crfQuality: 2);
         }
     }
 }

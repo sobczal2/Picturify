@@ -67,7 +67,7 @@ namespace Sobczal.Picturify.Core.Data
         internal FastImageB(string path) : this(Image.FromFile(path))
         {
         }
-        
+
         protected override Bitmap GetBitmap(CancellationToken cancellationToken)
         {
             var widthInBytes = PSize.Width * 4;
