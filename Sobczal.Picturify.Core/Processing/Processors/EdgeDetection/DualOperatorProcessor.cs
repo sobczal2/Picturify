@@ -51,6 +51,7 @@ namespace Sobczal.Picturify.Core.Processing.EdgeDetection
             _twoChannelConvolutionProcessor = new TwoChannelConvolutionProcessor(
                 new TwoChannelConvolutionParams(ProcessorParams.ChannelSelector,
                     ProcessorParams.ConvolutionOperator.GetX(), ProcessorParams.ConvolutionOperator.GetY(), mergingFunc,
+                    ProcessorParams.UseNonMaximumSuppression,
                     ProcessorParams.EdgeBehaviourType, ProcessorParams.WorkingArea));
             _normalisationProcessor = new NormalisationProcessor(new NormalisationParams(
                 ProcessorParams.ChannelSelector, null, ProcessorParams.LowerBoundForNormalisation,

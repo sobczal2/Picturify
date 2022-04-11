@@ -139,7 +139,7 @@ namespace Sobczal.Picturify.Core.Data
                 PicturifyConfig.LogError($"Saving failed: {e.Message}");
             }
         }
-        
+
         /// <summary>
         /// Saves this image to the specified stream in the specified format.
         /// </summary>

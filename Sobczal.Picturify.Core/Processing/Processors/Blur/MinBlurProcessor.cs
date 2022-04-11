@@ -5,9 +5,9 @@ using Sobczal.Picturify.Core.Processing.Standard;
 
 namespace Sobczal.Picturify.Core.Processing.Blur
 {
-    public class MinProcessor : BaseProcessor<MinParams, FastImageB>
+    public class MinBlurProcessor : BaseProcessor<MinBlurParams, FastImageB>
     {
-        public MinProcessor(MinParams processorParams) : base(processorParams)
+        public MinBlurProcessor(MinBlurParams processorParams) : base(processorParams)
         {
         }
 

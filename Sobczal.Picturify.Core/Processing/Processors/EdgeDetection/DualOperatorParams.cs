@@ -11,10 +11,12 @@ namespace Sobczal.Picturify.Core.Processing.EdgeDetection
         public EdgeBehaviourSelector.Type EdgeBehaviourType { get; set; }
         public float LowerBoundForNormalisation { get; set; }
         public float UpperBoundForNormalisation { get; set; }
+        public bool UseNonMaximumSuppression { get; set; }
 
         public DualOperatorParams(ChannelSelector channelSelector, IDualOperatorF convolutionOperator,
             OperatorBeforeNormalizationFunc mappingFunc, float lowerBoundForNormalisation = 0f,
             float upperBoundForNormalisation = 1f,
+            bool useNonMaximumSuppression = false,
             EdgeBehaviourSelector.Type edgeBehaviourType = EdgeBehaviourSelector.Type.Extend,
             IAreaSelector workingArea = null) : base(workingArea, channelSelector)
 
@@ -23,6 +25,7 @@ namespace Sobczal.Picturify.Core.Processing.EdgeDetection
             MappingFunc = mappingFunc;
             LowerBoundForNormalisation = lowerBoundForNormalisation;
             UpperBoundForNormalisation = upperBoundForNormalisation;
+            UseNonMaximumSuppression = useNonMaximumSuppression;
             EdgeBehaviourType = edgeBehaviourType;
         }
     }

@@ -11,6 +11,7 @@ namespace Sobczal.Picturify.Core.Processing.EdgeDetection
         public EdgeBehaviourSelector.Type EdgeBehaviourType { get; set; }
         public float LowerBoundForNormalisation { get; set; }
         public float UpperBoundForNormalisation { get; set; }
+        public bool UseNonMaximumSuppression { get; set; }
 
         public QuadOperatorParams(ChannelSelector channelSelector, IQuadOperatorF convolutionOperator,
             OperatorBeforeNormalizationFunc mappingFunc, float lowerBoundForNormalisation = 0f,

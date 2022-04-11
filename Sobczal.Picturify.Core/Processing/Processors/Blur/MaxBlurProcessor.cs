@@ -7,20 +7,20 @@ using Sobczal.Picturify.Core.Processing.Standard;
 namespace Sobczal.Picturify.Core.Processing.Blur
 {
     /// <summary>
-    /// <see cref="MaxProcessor"/> implements maximum filter on <see cref="FastImageB"/>.
+    /// <see cref="MaxBlurProcessor"/> implements maximum filter on <see cref="FastImageB"/>.
     /// This implementation operates on <see cref="FastImageB"/> instead of <see cref="FastImageF"/>,
     /// because it uses <see cref="RollingBucketProcessor"/> which can't operate on <see cref="FastImageF"/> internally which is
     /// much more performant than naive implementation. If you need floating point precision consider writing processor yourself ;).
     /// </summary>
-    public class MaxProcessor : BaseProcessor<MaxParams, FastImageB>
+    public class MaxBlurProcessor : BaseProcessor<MaxBlurParams, FastImageB>
     {
         /// <summary>
         /// Default constructor.
         /// </summary>
-        /// <param name="processorParams">params to get used in this processor. Don't use same object of <see cref="MaxParams"/>
+        /// <param name="processorParams">params to get used in this processor. Don't use same object of <see cref="MaxBlurParams"/>
         /// on two different 
         /// </param>
-        public MaxProcessor(MaxParams processorParams) : base(processorParams)
+        public MaxBlurProcessor(MaxBlurParams processorParams) : base(processorParams)
         {
         }
         

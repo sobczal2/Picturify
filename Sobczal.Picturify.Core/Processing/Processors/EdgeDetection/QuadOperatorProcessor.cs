@@ -24,11 +24,13 @@ namespace Sobczal.Picturify.Core.Processing.EdgeDetection
                 new TwoChannelConvolutionParams(ProcessorParams.ChannelSelector,
                     ProcessorParams.ConvolutionOperator.GetX(), ProcessorParams.ConvolutionOperator.GetY(),
                     (in1, in2, channel) => in1 * in1 + in2 * in2,
+                    ProcessorParams.UseNonMaximumSuppression,
                     ProcessorParams.EdgeBehaviourType, ProcessorParams.WorkingArea));
             _diagTwoChannelConvolutionProcessor = new TwoChannelConvolutionProcessor(
                 new TwoChannelConvolutionParams(ProcessorParams.ChannelSelector,
                     ProcessorParams.ConvolutionOperator.GetDiag1(), ProcessorParams.ConvolutionOperator.GetDiag2(),
                     (in1, in2, channel) => in1 * in1 + in2 * in2,
+                    ProcessorParams.UseNonMaximumSuppression,
                     ProcessorParams.EdgeBehaviourType, ProcessorParams.WorkingArea));
             _normalisationProcessor = new NormalisationProcessor(new NormalisationParams(
                 ProcessorParams.ChannelSelector, null, ProcessorParams.LowerBoundForNormalisation,

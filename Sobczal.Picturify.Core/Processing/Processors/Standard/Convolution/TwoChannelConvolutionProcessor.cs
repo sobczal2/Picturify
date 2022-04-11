@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using Sobczal.Picturify.Core.Data;
+using Sobczal.Picturify.Core.Processing.EdgeDetection;
 using Sobczal.Picturify.Core.Processing.Standard.Util;
 
 namespace Sobczal.Picturify.Core.Processing.Standard
@@ -25,9 +26,13 @@ namespace Sobczal.Picturify.Core.Processing.Standard
 
         public override IFastImage Process(IFastImage fastImage, CancellationToken cancellationToken)
         {
-            var tempFastImage = fastImage.GetCopy();
+            var tempFastImage = fastImage.GetCopy().ToFloatRepresentation();
             tempFastImage.ExecuteProcessor(_processorChannel1);
             fastImage.ExecuteProcessor(_processorChannel2);
+            if (ProcessorParams.UseNonMaximumSuppression)
+                fastImage.ExecuteProcessor(new NonMaximumGradientSuppressionProcessor(
+                    new NonMaximumGradientSuppressionParams(ProcessorParams.WorkingArea,
+                        ProcessorParams.ChannelSelector, tempFastImage, ProcessorParams.EdgeBehaviourType)));
             fastImage.ExecuteProcessor(new MergeProcessor(new MergeParams(ProcessorParams.ChannelSelector,
                 ProcessorParams.MergingFunc, tempFastImage, ProcessorParams.WorkingArea)));
             return base.Process(fastImage, cancellationToken);

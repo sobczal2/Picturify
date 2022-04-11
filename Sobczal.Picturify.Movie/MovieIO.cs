@@ -1,64 +1,123 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
-using System.IO.Pipes;
-using System.Text;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Threading;
+using Sobczal.Picturify.Core;
 using Sobczal.Picturify.Core.Data;
+using Sobczal.Picturify.Core.Processing.Exceptions;
+using Sobczal.Picturify.Core.Utils;
 using Sobczal.Picturify.Movie.Transforms;
 
 namespace Sobczal.Picturify.Movie
 {
     public static class MovieIO
     {
-        public static void MovieToMovie(string inputFile, string outputFile, IMovieTransform movieTransform)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="inputFile"></param>
+        /// <param name="outputFile"></param>
+        /// <param name="movieTransform"></param>
+        /// <param name="size"></param>
+        /// <param name="outputFramerate"></param>
+        /// <param name="useSound"></param>
+        /// <param name="crfQuality">Quality setting - 2 best quality, 31 - worst quality, 15-18 recommended</param>
+        /// <exception cref="Exception"></exception>
+        /// <exception cref="ParamsArgumentException"></exception>
+        public static void MovieToMovie(string inputFile, string outputFile, IMovieTransform movieTransform, PSize size, float outputFramerate, bool useSound = true, int crfQuality = 15)
         {
-            var process = new Process();
-            process.StartInfo = new ProcessStartInfo
+            PicturifyConfig.LogInfo($"Started conversion of file {inputFile} in MovieIO.{MethodBase.GetCurrentMethod().Name}");
+            PicturifyConfig.SetLoggingLevel(PicturifyConfig.LoggingLevel.Error);
+            var sw = new Stopwatch();
+            sw.Start();
+            if (size.Width <= 0 || size.Height <= 0)
+                throw new ArgumentException("can't be negative or zero", nameof(size));
+            if(crfQuality < 2 || crfQuality > 31)
+                throw new ArgumentException("must be in rage 2-31", nameof(crfQuality));
+            var readProcess = new Process();
+            readProcess.StartInfo = new ProcessStartInfo
             {
-                Arguments = $@"-i {inputFile} -c:v bmp -vf scale=1920:1080 -f rawvideo -",
+                Arguments = $@"-hide_banner -v panic -i {inputFile} -s {size.Width}x{size.Height} -c:v bmp -f image2pipe -",
                 UseShellExecute = false,
                 CreateNoWindow = true,
                 FileName = "ffmpeg.exe",
                 RedirectStandardOutput = true,
-                RedirectStandardError = true,
             };
-            process.Start();
-            using (var stream = new MemoryStream())
+            
+            var writeProcess = new Process();
+            var soundArg = useSound ? $"-i {inputFile}" : string.Empty;
+            var soundArg2 = useSound ? "-map 1:a" : string.Empty;
+            writeProcess.StartInfo = new ProcessStartInfo
             {
-                var j = 0;
-                while (process.StandardOutput.BaseStream.CanRead)
+                Arguments = $@"-y -r {outputFramerate} -f jpeg_pipe -s {size.Width}x{size.Height} -i - {soundArg} -crf {crfQuality} -map 0:v {soundArg2} -shortest {outputFile}",
+                UseShellExecute = false,
+                CreateNoWindow = true,
+                FileName = "ffmpeg.exe",
+                RedirectStandardInput = true,
+            };
+            
+            readProcess.Start();
+            writeProcess.Start();
+            try
+            {
+                using (var stream = new MemoryStream())
                 {
-                    var startingBytes = new byte[6];
-                    for (var i = 0; i < 2; i++)
+                    var frameNo = 0;
+                    while (!readProcess.HasExited)
                     {
-                        startingBytes[i] = (byte) process.StandardOutput.BaseStream.ReadByte();
+                        var startingBytes = new byte[6];
+                        for (var i = 0; i < 2; i++)
+                        {
+                            startingBytes[i] = (byte) readProcess.StandardOutput.BaseStream.ReadByte();
+                        }
+
+                        for (var i = 2; i < 6; i++)
+                        {
+                            startingBytes[i] = (byte) readProcess.StandardOutput.BaseStream.ReadByte();
+                        }
+
+                        var imgSize = BitConverter.ToInt32(startingBytes, 2);
+
+                        stream.Position = 0;
+                        for (var i = 0; i < 6; i++)
+                        {
+                            stream.WriteByte(startingBytes[i]);
+                        }
+
+                        for (var i = 6; i < imgSize; i++)
+                        {
+                            stream.WriteByte((byte) readProcess.StandardOutput.BaseStream.ReadByte());
+                        }
+
+                        var fastImage = FastImageFactory.FromStream(stream);
+                        PicturifyConfig.SetLoggingLevel(PicturifyConfig.LoggingLevel.Information);
+                        PicturifyConfig.LogInfo($"Processing frame {frameNo++}");
+                        PicturifyConfig.SetLoggingLevel(PicturifyConfig.LoggingLevel.Error);
+                        fastImage = movieTransform.GetNext(fastImage);
+
+                        if (fastImage.PSize.Width != size.Width || fastImage.PSize.Height != size.Height)
+                            throw new Exception("Image can't change size in transformation.");
+                        fastImage.Save(writeProcess.StandardInput.BaseStream, ImageFormat.Jpeg);
                     }
-
-                    for (var i = 2; i < 6; i++)
-                    {
-                        startingBytes[i] = (byte) process.StandardOutput.BaseStream.ReadByte();
-                    }
-
-                    var imgSize = BitConverter.ToInt32(startingBytes, 2);
-
-                    for (var i = 0; i < 6; i++)
-                    {
-                        stream.WriteByte(startingBytes[i]);
-                    }
-
-                    for (var i = 6; i < imgSize; i++)
-                    {
-                        stream.WriteByte((byte) process.StandardOutput.BaseStream.ReadByte());
-                    }
-
-                    stream.Position = 0;
-                    FastImageFactory.FromStream(stream).Save($@"D:\dev\dotnet\libraries\images\PicturifyExamples\temp\output{j++}.jpg");
-                    Console.WriteLine("position" + stream.Position);
-                    Console.WriteLine("length" + stream.Length);
                 }
             }
-
+            catch (ArgumentException e)
+            {
+                throw new ArgumentException(
+                    "File not found or ffmpeg.exe not found(try adding it to path)");
+            }
+            finally
+            {
+                readProcess.Close();
+                writeProcess.Close();
+            }
+            sw.Stop();
+            PicturifyConfig.SetLoggingLevel(PicturifyConfig.LoggingLevel.Information);
+            PicturifyConfig.LogTime($"MovieIO.{MethodBase.GetCurrentMethod().Name}", sw.ElapsedMilliseconds);
         }
     }
 }
