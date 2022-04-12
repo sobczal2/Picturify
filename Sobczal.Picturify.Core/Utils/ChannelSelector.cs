@@ -1,4 +1,6 @@
-﻿namespace Sobczal.Picturify.Core.Utils
+﻿using System.Text;
+
+namespace Sobczal.Picturify.Core.Utils
 {
     public class ChannelSelector
     {
@@ -19,6 +21,12 @@
             {UseRed = false, UseGreen = true, UseBlue = false, UseAlpha = false};
         public static ChannelSelector B => new ChannelSelector
             {UseRed = false, UseGreen = false, UseBlue = true, UseAlpha = false};
+        public static ChannelSelector RG => new ChannelSelector
+            {UseRed = true, UseGreen = true, UseBlue = false, UseAlpha = false};
+        public static ChannelSelector RB => new ChannelSelector
+            {UseRed = true, UseGreen = false, UseBlue = true, UseAlpha = false};
+        public static ChannelSelector GB => new ChannelSelector
+            {UseRed = false, UseGreen = true, UseBlue = true, UseAlpha = false};
 
         public bool Used(int channel)
         {
@@ -35,6 +43,16 @@
             }
 
             return false;
+        }
+
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            if (UseAlpha) sb.Append("A");
+            if (UseRed) sb.Append("R");
+            if (UseGreen) sb.Append("G");
+            if (UseBlue) sb.Append("B");
+            return sb.ToString();
         }
     }
 }

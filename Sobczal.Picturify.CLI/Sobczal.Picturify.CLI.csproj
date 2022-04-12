@@ -1,9 +1,12 @@
-<Project Sdk="Microsoft.NET.Sdk">
+ <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
+        <PackAsTool>true</PackAsTool>
+        <ToolCommandName>PicturifyCli</ToolCommandName>
+        <PackageOutputPath>./nupkg</PackageOutputPath>
         <ImplicitUsings>disable</ImplicitUsings>
         <Nullable>disable</Nullable>
-        <TargetFrameworks>net48;net6.0;netstandard2.1</TargetFrameworks>
+        <TargetFramework>net6.0</TargetFramework>
         <OutputType>Exe</OutputType>
         <LangVersion>7.3</LangVersion>
         <AssemblyName>PicturifyCli</AssemblyName>
@@ -11,6 +14,10 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Sobczal.Picturify.Core\Sobczal.Picturify.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="System.CommandLine" Version="2.0.0-beta3.22114.1" />
     </ItemGroup>
 
 </Project>

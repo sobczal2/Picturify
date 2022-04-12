@@ -105,7 +105,7 @@ namespace Sobczal.Picturify.Movie
                     }
                 }
             }
-            catch (ArgumentException e)
+            catch (ArgumentException)
             {
                 throw new ArgumentException(
                     "File not found or ffmpeg.exe not found(try adding it to path)");

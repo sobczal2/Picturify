@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.CommandLine;
-using Sobczal.Picturify.Core.CLI;
+using Sobczal.Picturify.CLI.Core;
 
 namespace Sobczal.Picturify.CLI
 {
@@ -9,15 +9,17 @@ namespace Sobczal.Picturify.CLI
     {
         public static void Main(string[] args)
         {
-            Console.WriteLine("Henlo2");
-            // var availableCommands = new List<Command>();
-            // var coreCommand = new Command("Core");
-            // availableCommands.Add();
-            //
-            // var rootCommand = new RootCommand()
-            // {
-            //
-            // };
+            var packageCommands = new List<Command>();
+            packageCommands.Add(CoreCli.GetCoreCommand());
+            packageCommands.Add(new Command("Movie"));
+
+            var rootCommand = new RootCommand("PicturifyCli is a command line interface for Picturify. Have fun!");
+            foreach (var command in packageCommands)
+            {
+                rootCommand.AddCommand(command);
+            }
+
+            rootCommand.Invoke(args);
         }
     }
 }
