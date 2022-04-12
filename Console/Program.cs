@@ -69,7 +69,7 @@ namespace Console
 
                 // PicturifyConfig.SetLoggingLevel(PicturifyConfig.LoggingLevel.Fatal);
                 var sobel = new DualOperatorProcessor(new DualOperatorParams(ChannelSelector.RGB,
-                    new SobelOperator5(), OperatorBeforeNormalizationFunc.Log, useNonMaximumSuppression: true));
+                    new SobelOperator5(), OperatorBeforeNormalizationFunc.Log, useNonMaximumSuppression: true, lowerBoundForNormalisation: -50, upperBoundForNormalisation: 100));
                 var maxBlur = new GaussianBlurProcessor(new GaussianBlurParams(ChannelSelector.RGB, new PSize(2, 2), 2.4f));
                 var normalisation = new NormalisationProcessor(new NormalisationParams(ChannelSelector.RGB));
                 var threshold = new PointManipulationProcessor(new PointManipulationParams(ChannelSelector.RGB,
@@ -84,11 +84,11 @@ namespace Console
                 var fastImage =
                     FastImageFactory.FromFile(
                         @"C:\dev\dotnet\libs\DataAndAlgorithms\Image\PicturifyExamples\cyber.jpg").ToGrayscale();
-                fastImage.ExecuteProcessor(sobel);
+                fastImage.ExecuteProcessor(new MeanBlurProcessor(new MeanBlurParams(ChannelSelector.RGB, new PSize(7, 7))));
                 fastImage.Save(@"C:\dev\dotnet\libs\DataAndAlgorithms\Image\PicturifyExamples\output2.jpg");
-                // MovieIO.MovieToMovie(@"D:\dev\dotnet\libraries\images\PicturifyExamples\videos\2055.mp4",
-                // @"D:\dev\dotnet\libraries\images\PicturifyExamples\createdVideos\output3.mp4",
-                // new MultipleProcessorTransform(new List<IBaseProcessor>{sobel, threshold}), new PSize(1920, 1080), 25, useSound: true, crfQuality: 18);
+                // MovieIO.MovieToMovie(@"C:\dev\dotnet\libs\DataAndAlgorithms\Image\PicturifyExamples\videos\2055.mp4",
+                // @"C:\dev\dotnet\libs\DataAndAlgorithms\Image\PicturifyExamples\videos\output.mp4",
+                // new MultipleProcessorTransform(new List<IBaseProcessor>{sobel}), new PSize(1280, 720), 24, useSound: true, crfQuality: 18);
         }
     }
 }
