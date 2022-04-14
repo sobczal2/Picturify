@@ -15,13 +15,14 @@ namespace Sobczal.Picturify.Core.Processing.Standard
 
         public override IFastImage Before(IFastImage fastImage, CancellationToken cancellationToken)
         {
+            base.Before(fastImage, cancellationToken);
             _processorChannel1 = new MultipleConvolutionProcessor(new MultipleConvolutionParams(
                 ProcessorParams.ChannelSelector, ProcessorParams.ConvolutionMatrixesChannel1,
                 ProcessorParams.EdgeBehaviourType, ProcessorParams.WorkingArea));
             _processorChannel2 = new MultipleConvolutionProcessor(new MultipleConvolutionParams(
                 ProcessorParams.ChannelSelector, ProcessorParams.ConvolutionMatrixesChannel2,
-                ProcessorParams.EdgeBehaviourType, ProcessorParams.WorkingArea));
-            return base.Before(fastImage, cancellationToken);
+                ProcessorParams.EdgeBehaviourType, ProcessorParams.WorkingArea.GetCopy()));
+            return fastImage;
         }
 
         public override IFastImage Process(IFastImage fastImage, CancellationToken cancellationToken)

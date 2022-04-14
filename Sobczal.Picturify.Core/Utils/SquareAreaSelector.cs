@@ -55,6 +55,11 @@ namespace Sobczal.Picturify.Core.Utils
                 throw new ArgumentException("Invalid area selector.");
         }
 
+        public IAreaSelector GetCopy()
+        {
+            return new SquareAreaSelector(LeftInclusive, RightExclusive, BotInclusive, TopExclusive);
+        }
+
         public SquareAreaSelector AsSquareAreaSelector()
         {
             return this;

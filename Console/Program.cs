@@ -69,26 +69,25 @@ namespace Console
 
                 // PicturifyConfig.SetLoggingLevel(PicturifyConfig.LoggingLevel.Fatal);
                 var sobel = new DualOperatorProcessor(new DualOperatorParams(ChannelSelector.RGB,
-                    new SobelOperator5(), OperatorBeforeNormalizationFunc.Log, useNonMaximumSuppression: true, lowerBoundForNormalisation: -50, upperBoundForNormalisation: 100));
-                var maxBlur = new GaussianBlurProcessor(new GaussianBlurParams(ChannelSelector.RGB, new PSize(2, 2), 2.4f));
-                var normalisation = new NormalisationProcessor(new NormalisationParams(ChannelSelector.RGB));
-                var threshold = new PointManipulationProcessor(new PointManipulationParams(ChannelSelector.RGB,
-                    (a, r, g, b, x, y, selector) =>
-                    {
-                        if (selector.UseAlpha) a = a > 0.3f ? a : 0f;
-                        if (selector.UseRed) r = r > 0.3f ? r : 0f;
-                        if (selector.UseGreen) g = g > 0.3f ? g : 0f;
-                        if (selector.UseBlue) b = b > 0.3f ? b : 0f;
-                        return (a, r, g, b);
-                    }));
+                    new SobelOperator5(), OperatorBeforeNormalizationFunc.Log, useNonMaximumSuppression: false, edgeBehaviourType: EdgeBehaviourSelector.Type.Crop));
+                // var normalisation = new NormalisationProcessor(new NormalisationParams(ChannelSelector.RGB));
+                // var threshold = new PointManipulationProcessor(new PointManipulationParams(ChannelSelector.RGB,
+                //     (a, r, g, b, x, y, selector) =>
+                //     {
+                //         if (selector.UseAlpha) a = a > 0.3f ? a : 0f;
+                //         if (selector.UseRed) r = r > 0.3f ? r : 0f;
+                //         if (selector.UseGreen) g = g > 0.3f ? g : 0f;
+                //         if (selector.UseBlue) b = b > 0.3f ? b : 0f;
+                //         return (a, r, g, b);
+                //     }));
                 var fastImage =
                     FastImageFactory.FromFile(
-                        @"C:\dev\dotnet\libs\DataAndAlgorithms\Image\PicturifyExamples\cyber.jpg").ToGrayscale();
-                fastImage.ExecuteProcessor(new MeanBlurProcessor(new MeanBlurParams(ChannelSelector.RGB, new PSize(7, 7))));
-                fastImage.Save(@"C:\dev\dotnet\libs\DataAndAlgorithms\Image\PicturifyExamples\output2.jpg");
-                // MovieIO.MovieToMovie(@"C:\dev\dotnet\libs\DataAndAlgorithms\Image\PicturifyExamples\videos\2055.mp4",
-                // @"C:\dev\dotnet\libs\DataAndAlgorithms\Image\PicturifyExamples\videos\output.mp4",
-                // new MultipleProcessorTransform(new List<IBaseProcessor>{sobel}), new PSize(1280, 720), 24, useSound: true, crfQuality: 18);
+                        @"D:\dev\dotnet\libs\image\PicturifyExamples\images\cyber.png");
+                fastImage.ExecuteProcessor(sobel);
+                fastImage.Save(@"D:\dev\dotnet\libs\image\PicturifyExamples\images\output.png");
+                // MovieIO.MovieToMovie(@"D:\dev\dotnet\libs\image\PicturifyExamples\videos\2055.mp4",
+                // @"D:\dev\dotnet\libs\image\PicturifyExamples\convertedVideos\2055_sobel.mp4",
+                // new MultipleProcessorTransform(new List<IBaseProcessor>{sobel}), new PSize(1920, 1080), 24, useSound: true, crfQuality: 18);
         }
     }
 }

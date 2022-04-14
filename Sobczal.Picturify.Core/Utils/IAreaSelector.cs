@@ -11,5 +11,6 @@
         void Resize(int horizontal, int vertical);
         SquareAreaSelector AsSquareAreaSelector();
         void Validate(PSize pSize);
+        IAreaSelector GetCopy();
     }
 }
