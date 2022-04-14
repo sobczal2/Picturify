@@ -1,7 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.CommandLine;
+using System.CommandLine.Builder;
+using System.CommandLine.Parsing;
 using Sobczal.Picturify.CLI.Core;
+using Sobczal.Picturify.Core;
 
 namespace Sobczal.Picturify.CLI
 {
@@ -19,7 +21,23 @@ namespace Sobczal.Picturify.CLI
                 rootCommand.AddCommand(command);
             }
 
-            rootCommand.Invoke(args);
+            var _ = new CommandLineBuilder(rootCommand)
+                .UseVersionOption()
+                .UseHelp()
+                .UseEnvironmentVariableDirective()
+                .UseParseDirective()
+                .UseSuggestDirective()
+                .RegisterWithDotnetSuggest()
+                .UseTypoCorrections()
+                .UseParseErrorReporting()
+                .CancelOnProcessTermination()
+                .UseExceptionHandler((exception, context) =>
+                {
+                    PicturifyConfig.LogError(exception.Message);
+                    context.ExitCode = 1;
+                })
+                .Build()
+                .Invoke(args);
         }
     }
 }

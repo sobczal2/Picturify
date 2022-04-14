@@ -68,12 +68,19 @@ namespace Sobczal.Picturify.Core.Data
         public static IFastImage FromFile(string path, Version version = Version.Float)
         {
             PicturifyConfig.LogInfo($"FastImage.{MethodBase.GetCurrentMethod().Name}");
-            switch (version)
+            try
             {
-                case Version.Byte:
-                    return new FastImageB(path);
-                default:
-                    return new FastImageF(path);
+                switch (version)
+                {
+                    case Version.Byte:
+                        return new FastImageB(path);
+                    default:
+                        return new FastImageF(path);
+                }
+            }
+            catch (Exception)
+            {
+                throw new FileNotFoundException($"File {path} can't be found or error reading file.");
             }
         }
 

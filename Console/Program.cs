@@ -1,22 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Sobczal.Picturify.Core;
-using Sobczal.Picturify.Core.Data;
+﻿using Sobczal.Picturify.Core.Data;
 using Sobczal.Picturify.Core.Data.Operators.EdgeDetection;
-using Sobczal.Picturify.Core.Processing;
-using Sobczal.Picturify.Core.Processing.Blur;
 using Sobczal.Picturify.Core.Processing.EdgeDetection;
-using Sobczal.Picturify.Core.Processing.Standard;
-using Sobczal.Picturify.Core.Processing.Standard.Util;
-using Sobczal.Picturify.Core.Processing.Testing;
+using Sobczal.Picturify.Core.Processing.PixelManipulation;
 using Sobczal.Picturify.Core.Utils;
-using Sobczal.Picturify.Movie;
-using Sobczal.Picturify.Movie.Transforms;
 
 namespace Console
 {
@@ -83,8 +69,12 @@ namespace Console
                 var fastImage =
                     FastImageFactory.FromFile(
                         @"D:\dev\dotnet\libs\image\PicturifyExamples\images\cyber.png");
+                var fastImage2 = fastImage.GetCopy();
                 fastImage.ExecuteProcessor(sobel);
+                fastImage.ExecuteProcessor(new NegativeProcessor(new NegativeParams(ChannelSelector.RGB)));
                 fastImage.Save(@"D:\dev\dotnet\libs\image\PicturifyExamples\images\output.png");
+                fastImage2.ExecuteProcessor(sobel);
+                fastImage2.Save(@"D:\dev\dotnet\libs\image\PicturifyExamples\images\output2.png");
                 // MovieIO.MovieToMovie(@"D:\dev\dotnet\libs\image\PicturifyExamples\videos\2055.mp4",
                 // @"D:\dev\dotnet\libs\image\PicturifyExamples\convertedVideos\2055_sobel.mp4",
                 // new MultipleProcessorTransform(new List<IBaseProcessor>{sobel}), new PSize(1920, 1080), 24, useSound: true, crfQuality: 18);

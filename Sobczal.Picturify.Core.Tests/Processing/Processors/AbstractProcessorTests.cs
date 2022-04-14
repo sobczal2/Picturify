@@ -359,6 +359,11 @@ namespace Sobczal.Picturify.Core.Tests.Processing.Processors
                 if (LeftInclusive > RightExclusive || BotInclusive > TopExclusive)
                     throw new ArgumentException("Invalid area selector.");
             }
+
+            public IAreaSelector GetCopy()
+            {
+                return new TestAreaSelector();
+            }
         }
     }
 }
