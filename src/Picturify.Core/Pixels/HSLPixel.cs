@@ -11,8 +11,8 @@ namespace Picturify.Core.Pixels;
 public class HSLPixel : IPixel
 {
     private float _hue;
-    private float _saturation;
     private float _lightness;
+    private float _saturation;
 
     public float this[
         ColorChannel channel

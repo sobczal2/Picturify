@@ -11,7 +11,7 @@ public interface ISize
 {
     int GetIntWidth();
     int GetIntHeight();
-    
+
     float GetFloatWidth();
     float GetFloatHeight();
 }

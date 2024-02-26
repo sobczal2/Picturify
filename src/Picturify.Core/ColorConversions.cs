@@ -20,28 +20,16 @@ public static class ColorConversions
         var min = Math.Min(r, Math.Min(g, b));
         var delta = max - min;
 
-        if (delta == 0)
-        {
-            return 0;
-        }
+        if (delta == 0) return 0;
 
         // ReSharper disable once CompareOfFloatsByEqualityOperator
-        if (max == r)
-        {
-            return 60 * (((g - b) / delta) % 6);
-        }
+        if (max == r) return 60 * ((g - b) / delta % 6);
 
         // ReSharper disable once CompareOfFloatsByEqualityOperator
-        if (max == g)
-        {
-            return 60 * (((b - r) / delta) + 2);
-        }
+        if (max == g) return 60 * ((b - r) / delta + 2);
 
         // ReSharper disable once CompareOfFloatsByEqualityOperator
-        if (max == b)
-        {
-            return 60 * (((r - g) / delta) + 4);
-        }
+        if (max == b) return 60 * ((r - g) / delta + 4);
 
         throw new Exception("This should never happen");
     }
@@ -57,10 +45,7 @@ public static class ColorConversions
         var min = Math.Min(r, Math.Min(g, b));
         var delta = max - min;
 
-        if (max == 0)
-        {
-            return 0;
-        }
+        if (max == 0) return 0;
 
         return delta / max;
     }
@@ -95,10 +80,7 @@ public static class ColorConversions
         float l
     )
     {
-        if (s == 0)
-        {
-            return l;
-        }
+        if (s == 0) return l;
 
         var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
         var p = 2 * l - q;
@@ -113,10 +95,7 @@ public static class ColorConversions
         float l
     )
     {
-        if (s == 0)
-        {
-            return l;
-        }
+        if (s == 0) return l;
 
         var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
         var p = 2 * l - q;
@@ -131,17 +110,14 @@ public static class ColorConversions
         float l
     )
     {
-        if (s == 0)
-        {
-            return l;
-        }
+        if (s == 0) return l;
 
         var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
         var p = 2 * l - q;
 
         return HueToRGB(p, q, h - 1 / 3f);
     }
-    
+
     // ReSharper disable once InconsistentNaming
     private static float HueToRGB(
         float p,
@@ -149,34 +125,19 @@ public static class ColorConversions
         float t
     )
     {
-        if (t < 0)
-        {
-            t += 1;
-        }
+        if (t < 0) t += 1;
 
-        if (t > 1)
-        {
-            t -= 1;
-        }
+        if (t > 1) t -= 1;
 
-        if (t < 1 / 6f)
-        {
-            return p + (q - p) * 6 * t;
-        }
+        if (t < 1 / 6f) return p + (q - p) * 6 * t;
 
-        if (t < 1 / 2f)
-        {
-            return q;
-        }
+        if (t < 1 / 2f) return q;
 
-        if (t < 2 / 3f)
-        {
-            return p + (q - p) * (2 / 3f - t) * 6;
-        }
+        if (t < 2 / 3f) return p + (q - p) * (2 / 3f - t) * 6;
 
         return p;
     }
-    
+
     // ReSharper disable once InconsistentNaming
     public static float ValueFromHSL(
         float h,
@@ -186,7 +147,7 @@ public static class ColorConversions
     {
         return l + s * Math.Min(l, 1 - l);
     }
-    
+
     // ReSharper disable once InconsistentNaming
     public static float RedFromHSV(
         float h,
@@ -194,12 +155,9 @@ public static class ColorConversions
         float v
     )
     {
-        if (s == 0)
-        {
-            return v;
-        }
+        if (s == 0) return v;
 
-        var i = (int) (h * 6);
+        var i = (int)(h * 6);
         var f = h * 6 - i;
         var p = v * (1 - s);
         var q = v * (1 - f * s);
@@ -216,7 +174,7 @@ public static class ColorConversions
             _ => throw new ArgumentOutOfRangeException()
         };
     }
-    
+
     // ReSharper disable once InconsistentNaming
     public static float GreenFromHSV(
         float h,
@@ -224,12 +182,9 @@ public static class ColorConversions
         float v
     )
     {
-        if (s == 0)
-        {
-            return v;
-        }
+        if (s == 0) return v;
 
-        var i = (int) (h * 6);
+        var i = (int)(h * 6);
         var f = h * 6 - i;
         var p = v * (1 - s);
         var q = v * (1 - f * s);
@@ -246,7 +201,7 @@ public static class ColorConversions
             _ => throw new ArgumentOutOfRangeException()
         };
     }
-    
+
     // ReSharper disable once InconsistentNaming
     public static float BlueFromHSV(
         float h,
@@ -254,12 +209,9 @@ public static class ColorConversions
         float v
     )
     {
-        if (s == 0)
-        {
-            return v;
-        }
+        if (s == 0) return v;
 
-        var i = (int) (h * 6);
+        var i = (int)(h * 6);
         var f = h * 6 - i;
         var p = v * (1 - s);
         var q = v * (1 - f * s);
@@ -276,7 +228,7 @@ public static class ColorConversions
             _ => throw new ArgumentOutOfRangeException()
         };
     }
-    
+
     // ReSharper disable once InconsistentNaming
     public static float LightnessFromHSV(
         float h,

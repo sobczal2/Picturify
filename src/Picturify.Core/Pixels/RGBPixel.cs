@@ -10,9 +10,9 @@ namespace Picturify.Core.Pixels;
 // ReSharper disable once InconsistentNaming
 public class RGBPixel : IPixel
 {
-    private float _red;
-    private float _green;
     private float _blue;
+    private float _green;
+    private float _red;
 
     public float this[
         ColorChannel channel

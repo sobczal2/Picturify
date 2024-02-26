@@ -13,6 +13,15 @@ namespace Picturify.Core.Images;
 public class RGBImage : IImage
 {
     private readonly RGBPixel[,] _pixels;
+
+    internal RGBImage(
+        ISize size
+    )
+    {
+        Size = size;
+        _pixels = new RGBPixel[size.GetIntWidth(), size.GetIntHeight()];
+    }
+
     public ISize Size { get; }
     public ColorChannel ColorChannel => ColorChannel.RGB;
 
@@ -30,13 +39,5 @@ public class RGBImage : IImage
     )
     {
         return ImageHelpers.CopyImage(this, targetColorChannel);
-    }
-
-    internal RGBImage(
-        ISize size
-    )
-    {
-        Size = size;
-        _pixels = new RGBPixel[size.GetIntWidth(), size.GetIntHeight()];
     }
 }

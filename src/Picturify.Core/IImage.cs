@@ -11,7 +11,13 @@ public interface IImage
 {
     ISize Size { get; }
     ColorChannel ColorChannel { get; }
-    IPixel this[int x, int y] { get; set; }
-    
-    IImage Clone(ColorChannel targetColorChannel);
+
+    IPixel this[
+        int x,
+        int y
+    ] { get; set; }
+
+    IImage Clone(
+        ColorChannel targetColorChannel
+    );
 }

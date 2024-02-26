@@ -13,6 +13,15 @@ namespace Picturify.Core.Images;
 public class HSVImage : IImage
 {
     private readonly HSVPixel[,] _pixels;
+
+    internal HSVImage(
+        ISize size
+    )
+    {
+        Size = size;
+        _pixels = new HSVPixel[size.GetIntWidth(), size.GetIntHeight()];
+    }
+
     public ISize Size { get; }
     public ColorChannel ColorChannel => ColorChannel.HSV;
 
@@ -31,13 +40,5 @@ public class HSVImage : IImage
     )
     {
         return ImageHelpers.CopyImage(this, targetColorChannel);
-    }
-
-    internal HSVImage(
-        ISize size
-    )
-    {
-        Size = size;
-        _pixels = new HSVPixel[size.GetIntWidth(), size.GetIntHeight()];
     }
 }

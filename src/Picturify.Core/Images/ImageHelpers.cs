@@ -9,7 +9,10 @@ namespace Picturify.Core.Images;
 
 public static class ImageHelpers
 {
-    internal static IImage CopyImage(IImage image, ColorChannel targetColorChannel)
+    internal static IImage CopyImage(
+        IImage image,
+        ColorChannel targetColorChannel
+    )
     {
         IImage newImage = targetColorChannel switch
         {
@@ -20,12 +23,8 @@ public static class ImageHelpers
         };
 
         for (var x = 0; x < image.Size.GetIntWidth(); x++)
-        {
-            for (var y = 0; y < image.Size.GetIntHeight(); y++)
-            {
-                newImage[x, y] = image[x, y];
-            }
-        }
+        for (var y = 0; y < image.Size.GetIntHeight(); y++)
+            newImage[x, y] = image[x, y];
 
         return newImage;
     }

@@ -9,7 +9,13 @@ namespace Picturify.Core;
 
 public interface IPixel
 {
-    float this[ColorChannel channel] { get; set; }
+    float this[
+        ColorChannel channel
+    ] { get; set; }
+
     IPixel Clone();
-    IPixel Clone(ColorChannel targetColorChannel);
+
+    IPixel Clone(
+        ColorChannel targetColorChannel
+    );
 }
