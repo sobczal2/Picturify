@@ -1,6 +1,6 @@
 // # ==============================================================================
 // # Solution: Picturify
-// # File: HSLPixel.cs
+// # File: HSLAPixel.cs
 // # Author: Łukasz Sobczak
 // # Created: 26-02-2024
 // # ==============================================================================
@@ -8,24 +8,27 @@
 namespace Picturify.Core.Pixels;
 
 // ReSharper disable once InconsistentNaming
-public class HSLPixel : IPixel
+public class HSLAPixel : IPixel
 {
     private float _hue;
     private float _saturation;
     private float _lightness;
-
-    public HSLPixel(
+    private float _alpha;
+    
+    public HSLAPixel(
         float hue,
         float saturation,
-        float lightness
+        float lightness,
+        float alpha
     )
     {
         _hue = hue;
         _saturation = saturation;
         _lightness = lightness;
+        _alpha = alpha;
     }
 
-    public ColorSpace ColorSpace => ColorSpace.HSL;
+    public ColorSpace ColorSpace => ColorSpace.HSLA;
 
     public float this[
         ColorChannels channels
@@ -36,7 +39,7 @@ public class HSLPixel : IPixel
             ColorChannels.Red => ColorConversions.RedFromHSL(_hue, _saturation, _lightness),
             ColorChannels.Green => ColorConversions.GreenFromHSL(_hue, _saturation, _lightness),
             ColorChannels.Blue => ColorConversions.BlueFromHSL(_hue, _saturation, _lightness),
-            ColorChannels.Alpha => 1,
+            ColorChannels.Alpha => _alpha,
             ColorChannels.Hue => _hue,
             ColorChannels.Saturation => _saturation,
             ColorChannels.Lightness => _lightness,
@@ -48,16 +51,18 @@ public class HSLPixel : IPixel
             ColorChannels.Red => _hue = value,
             ColorChannels.Green => _saturation = value,
             ColorChannels.Blue => _lightness = value,
+            ColorChannels.Alpha => _alpha = value,
             _ => throw new ArgumentOutOfRangeException(nameof(channels), channels, null)
         };
     }
 
     public IPixel Clone()
     {
-        return new HSLPixel(
+        return new HSLAPixel(
             this[ColorChannels.Hue],
             this[ColorChannels.Saturation],
-            this[ColorChannels.Lightness]
+            this[ColorChannels.Lightness],
+            this[ColorChannels.Alpha]
         );
     }
 

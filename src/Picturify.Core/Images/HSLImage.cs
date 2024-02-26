@@ -12,18 +12,18 @@ namespace Picturify.Core.Images;
 // ReSharper disable once InconsistentNaming
 public class HSLImage : IImage
 {
-    private readonly HSVPixel[,] _pixels;
+    private readonly HSLPixel[,] _pixels;
 
     internal HSLImage(
         ISize size
     )
     {
         Size = size;
-        _pixels = new HSVPixel[size.GetIntWidth(), size.GetIntHeight()];
+        _pixels = new HSLPixel[size.GetIntWidth(), size.GetIntHeight()];
     }
 
     public ISize Size { get; }
-    public ColorChannel ColorChannel => ColorChannel.HSL;
+    public ColorSpace ColorSpace => ColorSpace.HSL;
 
     public IPixel this[
         int x,
@@ -31,14 +31,14 @@ public class HSLImage : IImage
     ]
     {
         get => _pixels[x, y];
-        set => _pixels[x, y] = (HSVPixel)value.Clone(ColorChannel);
+        set => _pixels[x, y] = (HSLPixel)value.Clone(ColorSpace);
     }
 
 
     public IImage Clone(
-        ColorChannel targetColorChannel
+        ColorSpace targetColorSpace
     )
     {
-        return ImageHelpers.CopyImage(this, targetColorChannel);
+        return ImageHelpers.CopyImage(this, targetColorSpace);
     }
 }

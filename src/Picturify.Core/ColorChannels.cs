@@ -8,7 +8,7 @@
 namespace Picturify.Core;
 
 [Flags]
-public enum ColorChannel
+public enum ColorChannels
 {
     Red = 1,
     Green = 2,
@@ -27,8 +27,12 @@ public enum ColorChannel
 
     // ReSharper disable once InconsistentNaming
     HSL = Hue | Saturation | Lightness,
+    // ReSharper disable once InconsistentNaming
+    HSLA = HSL | Alpha,
 
     // ReSharper disable once InconsistentNaming
     HSV = Hue | Saturation | Value,
+    // ReSharper disable once InconsistentNaming
+    HSVA = HSV | Alpha,
     Grayscale = 256
 }

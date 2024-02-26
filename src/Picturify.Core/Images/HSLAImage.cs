@@ -1,6 +1,6 @@
 // # ==============================================================================
 // # Solution: Picturify
-// # File: HSVImage.cs
+// # File: HSLAImage.cs
 // # Author: Łukasz Sobczak
 // # Created: 26-02-2024
 // # ==============================================================================
@@ -10,20 +10,20 @@ using Picturify.Core.Pixels;
 namespace Picturify.Core.Images;
 
 // ReSharper disable once InconsistentNaming
-public class HSVImage : IImage
+public class HSLAImage : IImage
 {
-    private readonly HSVPixel[,] _pixels;
+    private readonly HSLAPixel[,] _pixels;
 
-    internal HSVImage(
+    public HSLAImage(
         ISize size
     )
     {
         Size = size;
-        _pixels = new HSVPixel[size.GetIntWidth(), size.GetIntHeight()];
+        _pixels = new HSLAPixel[size.GetIntWidth(), size.GetIntHeight()];
     }
 
     public ISize Size { get; }
-    public ColorSpace ColorSpace => ColorSpace.HSV;
+    public ColorSpace ColorSpace => ColorSpace.HSLA;
 
     public IPixel this[
         int x,
@@ -31,9 +31,8 @@ public class HSVImage : IImage
     ]
     {
         get => _pixels[x, y];
-        set => _pixels[x, y] = (HSVPixel)value.Clone(ColorSpace);
+        set => _pixels[x, y] = (HSLAPixel)value.Clone(ColorSpace);
     }
-
 
     public IImage Clone(
         ColorSpace targetColorSpace

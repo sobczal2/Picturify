@@ -1,23 +1,18 @@
 // # ==============================================================================
 // # Solution: Picturify
-// # File: IImage.cs
+// # File: IProcessor.cs
 // # Author: Łukasz Sobczak
 // # Created: 26-02-2024
 // # ==============================================================================
 
-namespace Picturify.Core;
+namespace Picturify.Core.Processing;
 
-public interface IImage
+public interface IProcessor
 {
-    ISize Size { get; }
-    ColorSpace ColorSpace { get; }
+    IEnumerable<ColorSpace> PreferredColorSpaces { get; }
+    IEnumerable<ColorSpace> SupportedColorSpaces { get; }
 
-    IPixel this[
-        int x,
-        int y
-    ] { get; set; }
-
-    IImage Clone(
-        ColorSpace targetColorSpace
+    void Process(
+        IImage image
     );
 }

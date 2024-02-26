@@ -11,15 +11,15 @@ public static class ImageHelpers
 {
     internal static IImage CopyImage(
         IImage image,
-        ColorChannel targetColorChannel
+        ColorSpace targetColorSpace
     )
     {
-        IImage newImage = targetColorChannel switch
+        IImage newImage = targetColorSpace switch
         {
-            ColorChannel.RGB => new RGBImage(image.Size),
-            ColorChannel.HSL => new HSLImage(image.Size),
-            ColorChannel.HSV => new HSVImage(image.Size),
-            _ => throw new ArgumentOutOfRangeException(nameof(image.ColorChannel), image.ColorChannel, null)
+            ColorSpace.RGB => new RGBImage(image.Size),
+            ColorSpace.HSL => new HSLImage(image.Size),
+            ColorSpace.HSV => new HSVImage(image.Size),
+            _ => throw new ArgumentOutOfRangeException(nameof(image.ColorSpace), image.ColorSpace, null)
         };
 
         for (var x = 0; x < image.Size.GetIntWidth(); x++)

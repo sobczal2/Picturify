@@ -14,7 +14,7 @@ public class RGBImage : IImage
 {
     private readonly RGBPixel[,] _pixels;
 
-    internal RGBImage(
+    public RGBImage(
         ISize size
     )
     {
@@ -23,7 +23,7 @@ public class RGBImage : IImage
     }
 
     public ISize Size { get; }
-    public ColorChannel ColorChannel => ColorChannel.RGB;
+    public ColorSpace ColorSpace => ColorSpace.RGB;
 
     public IPixel this[
         int x,
@@ -31,13 +31,13 @@ public class RGBImage : IImage
     ]
     {
         get => _pixels[x, y];
-        set => _pixels[x, y] = (RGBPixel)value.Clone(ColorChannel);
+        set => _pixels[x, y] = (RGBPixel)value.Clone(ColorSpace);
     }
 
     public IImage Clone(
-        ColorChannel targetColorChannel
+        ColorSpace targetColorSpace
     )
     {
-        return ImageHelpers.CopyImage(this, targetColorChannel);
+        return ImageHelpers.CopyImage(this, targetColorSpace);
     }
 }
