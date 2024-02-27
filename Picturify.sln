@@ -13,7 +13,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Picturify.IO.ImageMagick", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Picturify.Playground", "src\Picturify.Playground\Picturify.Playground.csproj", "{198EF26C-3C2F-4C38-B88E-B3C37C20BD37}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Persistify.Util", "src\Persistify.Util\Persistify.Util.csproj", "{B4EE55E4-18DB-45DC-8F8A-3F3DFB84F4A7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Picturify.Util", "src\Picturify.Util\Picturify.Util.csproj", "{B4EE55E4-18DB-45DC-8F8A-3F3DFB84F4A7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Picturify.IO.FFmpeg", "src\Picturify.IO.FFmpeg\Picturify.IO.FFmpeg.csproj", "{5683505A-B9C0-4A35-A70C-796E591ED4FF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,6 +30,7 @@ Global
 		{09B688E1-862D-4083-BE5A-A015A10E75FE} = {0AAF3ACC-30EF-4F4B-A66B-7A4ED5783916}
 		{198EF26C-3C2F-4C38-B88E-B3C37C20BD37} = {0AAF3ACC-30EF-4F4B-A66B-7A4ED5783916}
 		{B4EE55E4-18DB-45DC-8F8A-3F3DFB84F4A7} = {0AAF3ACC-30EF-4F4B-A66B-7A4ED5783916}
+		{5683505A-B9C0-4A35-A70C-796E591ED4FF} = {0AAF3ACC-30EF-4F4B-A66B-7A4ED5783916}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{AABD7059-E962-415A-B896-DE45261F46E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -46,5 +49,9 @@ Global
 		{B4EE55E4-18DB-45DC-8F8A-3F3DFB84F4A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B4EE55E4-18DB-45DC-8F8A-3F3DFB84F4A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B4EE55E4-18DB-45DC-8F8A-3F3DFB84F4A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5683505A-B9C0-4A35-A70C-796E591ED4FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5683505A-B9C0-4A35-A70C-796E591ED4FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5683505A-B9C0-4A35-A70C-796E591ED4FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5683505A-B9C0-4A35-A70C-796E591ED4FF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

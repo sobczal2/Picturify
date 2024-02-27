@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Picturify.IO.FFmpeg\Picturify.IO.FFmpeg.csproj" />
+      <ProjectReference Include="..\Picturify.Util\Picturify.Util.csproj" />
+      <ProjectReference Include="..\Picturify.IO.ImageMagick\Picturify.IO.ImageMagick.csproj" />
+    </ItemGroup>
+
+</Project>

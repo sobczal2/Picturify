@@ -33,6 +33,8 @@ public class ImageMagickFileWriter : IImageWriter
         IImage image
     )
     {
+        if (!_canWrite)
+            throw new InvalidOperationException("Cannot write to file");
         _canWrite = false;
 
         using var imageMagickImage =

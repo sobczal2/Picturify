@@ -5,7 +5,7 @@
 // # Created: 26-02-2024
 // # ==============================================================================
 
-namespace Persistify.Util;
+namespace Picturify.Util;
 
 public static class PicturifyMathF
 {
