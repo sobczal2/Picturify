@@ -1,3 +1,5 @@
+This readme is about previous version of this project, Picturify is currently going through a rewrite
+
 # Picturify
 
 Picturify is a C# library to edit images.
